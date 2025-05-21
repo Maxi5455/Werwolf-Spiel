@@ -236,17 +236,19 @@
         document.getElementById("setup").classList.remove("hidden");
       }
       document.getElementById("phase").textContent = (phase === 'Nacht') ? '🌙 Nacht' : '🌞 Tag';
+
+
+
+      setInterval(() => {
+  // Lade die Daten frisch aus localStorage
+  players = JSON.parse(localStorage.getItem('players')) || [];
+  updatePlayerList();
+}, 3000); // alle 3 Sekunden aktualisieren
     };
   </script>
 </body>
 </html>
 
-
-setInterval(() => {
-  // Lade die Daten frisch aus localStorage
-  players = JSON.parse(localStorage.getItem('players')) || [];
-  updatePlayerList();
-}, 3000); // alle 3 Sekunden aktualisieren
 
 
 
