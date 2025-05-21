@@ -237,6 +237,23 @@
       }
       document.getElementById("phase").textContent = (phase === 'Nacht') ? '🌙 Nacht' : '🌞 Tag';
 
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDsmW7iO8xYLddVuc2bfMZmxHhQexc5U0M",
+    authDomain: "werwolf-a6f64.firebaseapp.com",
+    databaseURL: "https://werwolf-a6f64-default-rtdb.firebaseio.com",
+    projectId: "werwolf-a6f64",
+    storageBucket: "werwolf-a6f64.appspot.com",
+    messagingSenderId: "911084494700",
+    appId: "1:911084494700:web:52f98514790d354ae01d49",
+    measurementId: "G-C1ESR9J2CK"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
 
 
       setInterval(() => {
