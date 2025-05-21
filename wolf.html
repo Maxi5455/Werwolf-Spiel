@@ -1,228 +1,248 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Werwolf Spiel</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Open+Sans&display=swap');
 
+    /* Hintergrund */
     body {
-      background: url('https://images.unsplash.com/photo-1612890981019-4ed0b6cf0e12?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+      margin: 0;
+      padding: 0;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
       background-size: cover;
-      font-family: 'Cinzel Decorative', cursive;
+      font-family: 'Open Sans', sans-serif;
       color: #f0e6d2;
       text-align: center;
-      padding: 2em;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 2em 1em 4em;
+      box-sizing: border-box;
+    }
+
+    /* Overlay Container für Inhalte */
+    #container {
+      background: rgba(18, 18, 20, 0.85);
+      border-radius: 15px;
+      padding: 2em 3em;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 0 20px 5px rgba(0,0,0,0.7);
     }
 
     h1 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 3em;
       color: #ffd700;
-      font-size: 2.5em;
-      text-shadow: 2px 2px 4px black;
+      margin-bottom: 0.3em;
+      text-shadow: 2px 2px 6px #000;
     }
 
-    input, button {
-      padding: 0.6em;
-      font-size: 1em;
-      margin: 0.5em;
-      border-radius: 10px;
+    /* Inputs & Buttons */
+    input[type="text"] {
+      font-size: 1.1em;
+      padding: 0.6em 1em;
+      border-radius: 8px;
       border: none;
-      background: #333;
-      color: #ffd700;
-      font-family: inherit;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-      cursor: pointer;
+      width: 60%;
+      max-width: 300px;
+      margin-bottom: 1em;
+      box-shadow: inset 1px 1px 5px #222;
+      color: #222;
+      font-weight: 600;
     }
 
-    button:hover {
-      background: #555;
-    }
-
-    #roleSection, #masterView, #infoBox { display: none; }
-
-    .card {
-      background: rgba(30, 30, 30, 0.8);
-      border: 2px solid #ffd700;
+    button {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.1em;
+      padding: 0.7em 1.8em;
       border-radius: 12px;
-      padding: 1em;
-      margin: 1em;
-      display: inline-block;
-      width: 200px;
-      color: #f8f8f8;
+      border: none;
+      background: linear-gradient(45deg, #f3d56e, #b88900);
+      color: #3a2e00;
+      box-shadow: 0 4px 8px rgba(184,137,0,0.6);
+      cursor: pointer;
+      margin: 0.4em;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: linear-gradient(45deg, #b88900, #f3d56e);
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(255,215,0,0.8);
     }
 
-    .alive { border-color: #2ecc71; }
-    .dead { border-color: #e74c3c; }
+    #roleSection, #masterView, #infoBox {
+      margin-top: 2em;
+      display: none;
+    }
 
-    .role-name {
-      font-size: 1.2em;
-      color: #f1c40f;
-      margin-bottom: 0.5em;
+    /* Rollenkarte */
+    .card {
+      background: rgba(32, 32, 34, 0.9);
+      border-radius: 15px;
+      border: 2px solid #ffd700;
+      padding: 1.3em 1.5em;
+      margin: 1em 1em 1em 1em;
+      display: inline-block;
+      width: 210px;
+      box-shadow: 0 0 15px 2px rgba(255, 215, 0, 0.6);
+      color: #fff9d2;
+    }
+    .alive {
+      border-color: #2ecc71;
+      box-shadow: 0 0 20px 3px #27ae6011;
+    }
+    .dead {
+      border-color: #e74c3c;
+      box-shadow: 0 0 20px 3px #e74c3c33;
+      opacity: 0.7;
+      text-decoration: line-through;
     }
 
     .player-name {
-      font-weight: bold;
-      font-size: 1.3em;
+      font-weight: 700;
+      font-size: 1.35em;
+      margin-bottom: 0.3em;
+      color: #f6d365;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    .role-name {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.25em;
+      color: #ffd700;
+      margin-bottom: 0.6em;
+      text-shadow: 1px 1px 2px #000;
     }
 
     .status-btn {
-      margin-top: 0.5em;
-      padding: 0.3em;
-      font-size: 0.9em;
-      border-radius: 8px;
       background: #222;
-      color: #ccc;
+      color: #f0e6d2;
+      padding: 0.4em 0.7em;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.95em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: inset 0 0 6px #444;
+      transition: background 0.3s ease;
+    }
+    .status-btn:hover {
+      background: #444;
     }
 
+    /* Info Box */
     #infoBox {
       position: fixed;
-      top: 10%;
-      left: 10%;
-      right: 10%;
-      bottom: 10%;
-      background: rgba(0,0,0,0.95);
-      padding: 2em;
+      top: 8%;
+      left: 8%;
+      right: 8%;
+      bottom: 8%;
+      background: rgba(20,20,20,0.97);
+      border-radius: 20px;
+      padding: 2.5em 3em;
       overflow-y: auto;
-      border-radius: 15px;
-      z-index: 1000;
+      z-index: 9999;
+      color: #f0e6d2;
+      box-shadow: 0 0 30px 5px #ffd700aa;
     }
-
-    #infoBox h2 { color: #ffd700; }
-    #qr {
-      margin-top: 2em;
+    #infoBox h2 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 2em;
+      color: #ffd700;
+      margin-bottom: 1em;
+      text-shadow: 2px 2px 6px #000;
     }
-
-    .close-btn {
-      background: #900;
-      color: white;
-      font-weight: bold;
-      margin-top: 1em;
-    }
-
-    ul {
-      text-align: left;
+    #infoBox ul {
       max-width: 600px;
-      margin: auto;
-      color: #eee;
+      margin: 0 auto;
+      text-align: left;
+      font-size: 1.1em;
+      line-height: 1.6em;
+      color: #f5f1da;
+    }
+    #infoBox ul li {
+      margin-bottom: 0.9em;
+    }
+    #infoBox .close-btn {
+      background: #900;
+      padding: 0.7em 1.5em;
+      border-radius: 15px;
+      font-weight: 700;
+      font-family: 'Cinzel Decorative', cursive;
+      margin-top: 2em;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      cursor: pointer;
+      border: none;
+      color: #fff;
+      box-shadow: 0 0 15px 3px #aa0000cc;
+      transition: background 0.3s ease;
+    }
+    #infoBox .close-btn:hover {
+      background: #b33;
+    }
+
+    /* QR Code */
+    #qr {
+      margin-top: 3em;
+    }
+    #qr h3 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.5em;
+      color: #f7d874;
+      margin-bottom: 0.7em;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    #qr img {
+      box-shadow: 0 0 15px 3px #ffd700aa;
+      border-radius: 15px;
+      width: 200px;
+      height: 200px;
+    }
+
+    /* Impressum unten rechts */
+    #impressum {
+      position: fixed;
+      bottom: 10px;
+      right: 15px;
+      font-size: 0.85em;
+      color: #ccc;
+      background: rgba(0, 0, 0, 0.55);
+      padding: 6px 12px;
+      border-radius: 10px;
+      z-index: 9999;
+      font-family: 'Open Sans', sans-serif;
+      box-shadow: 0 0 8px 1px #000000cc;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      #container {
+        padding: 1.5em 1.5em;
+      }
+      input[type="text"] {
+        width: 100%;
+        max-width: none;
+      }
+      .card {
+        width: 90%;
+        margin: 0.8em auto;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>🐺 Werwolf Rollen-Ziehung</h1>
+  <div id="container">
+    <h1>🐺 Werwolf Rollen-Ziehung</h1>
 
-  <div id="joinSection">
-    <input type="text" id="playerName" placeholder="Dein Name eingeben">
-    <button onclick="drawRole()">Rolle ziehen</button>
-  </div>
-
-  <div id="roleSection">
-    <h2>Deine Rolle:</h2>
-    <p id="yourRole" class="role-name"></p>
-  </div>
-
-  <br>
-  <button onclick="openMaster()">🎩 Erzähler-Modus</button>
-  <button onclick="showInfo()">ℹ️ Rollenhilfe</button>
-
-  <div id="masterView">
-    <h2>🎭 Erzähleransicht</h2>
-    <div id="playerCards"></div>
-  </div>
-
-  <div id="qr">
-    <h3>📱 QR-Code zum Spiel</h3>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://maxi5455.github.io/Werwolf-Spiel/wolf.html&size=200x200" alt="QR Code">
-  </div>
-
-  <div id="infoBox">
-    <h2>📘 Rollenhilfe</h2>
-    <ul>
-      <li><b>Werwolf:</b> Tötet nachts gemeinsam einen Spieler.</li>
-      <li><b>Dorfbewohner:</b> Keine Fähigkeit, muss Werwölfe entlarven.</li>
-      <li><b>Seherin:</b> Sieht jede Nacht die Rolle eines Spielers.</li>
-      <li><b>Hexe:</b> Hat zwei Tränke: Heilung & Vergiftung.</li>
-      <li><b>Jäger:</b> Reißt beim Tod einen Spieler mit.</li>
-      <li><b>Amor:</b> Verbindet zwei Spieler zu Liebenden.</li>
-      <li><b>Dieb:</b> Wählt zu Beginn zwischen zwei Extra-Rollen.</li>
-      <li><b>Bürgermeister:</b> Entscheidet bei Stimmengleichstand.</li>
-    </ul>
-    <button class="close-btn" onclick="hideInfo()">Schließen</button>
-  </div>
-
-  <script>
-    const roles = [
-      'Werwolf', 'Werwolf',
-      'Dorfbewohner', 'Dorfbewohner', 'Dorfbewohner',
-      'Seherin', 'Hexe', 'Jäger', 'Amor',
-      'Dieb', 'Bürgermeister', 'Dorfbewohner',
-      'Werwolf', 'Dorfbewohner', 'Dorfbewohner',
-      'Dorfbewohner', 'Dorfbewohner', 'Dorfbewohner',
-      'Dorfbewohner', 'Dorfbewohner'
-    ];
-
-    let assignedRoles = [];
-    let players = [];
-
-    function drawRole() {
-      const name = document.getElementById("playerName").value.trim();
-      if (!name) return alert("Bitte gib deinen Namen ein.");
-      if (players.find(p => p.name === name)) return alert("Dieser Name wurde schon verwendet.");
-      if (roles.length === 0) return alert("Es sind keine Rollen mehr verfügbar!");
-
-      const randomIndex = Math.floor(Math.random() * roles.length);
-      const role = roles.splice(randomIndex, 1)[0];
-      assignedRoles.push({ name, role, alive: true });
-      players.push({ name });
-
-      document.getElementById("yourRole").textContent = role;
-      document.getElementById("roleSection").style.display = "block";
-      document.getElementById("joinSection").style.display = "none";
-    }
-
-    function openMaster() {
-      const pw = prompt("Passwort für Erzähler:");
-      if (pw !== "9999") {
-        alert("Falsches Passwort.");
-        return;
-      }
-
-      document.getElementById("masterView").style.display = "block";
-      renderMasterView();
-    }
-
-    function toggleStatus(index) {
-      assignedRoles[index].alive = !assignedRoles[index].alive;
-      renderMasterView();
-    }
-
-    function renderMasterView() {
-      const container = document.getElementById("playerCards");
-      container.innerHTML = "";
-      assignedRoles.forEach((p, i) => {
-        const card = document.createElement("div");
-        card.className = "card " + (p.alive ? "alive" : "dead");
-
-        card.innerHTML = `
-          <div class="player-name">${p.name}</div>
-          <div class="role-name">${p.role}</div>
-          <button class="status-btn" onclick="toggleStatus(${i})">
-            ${p.alive ? "Lebendig" : "Tot"}
-          </button>
-        `;
-
-        container.appendChild(card);
-      });
-    }
-
-    function showInfo() {
-      document.getElementById("infoBox").style.display = "block";
-    }
-
-    function hideInfo() {
-      document.getElementById("infoBox").style.display = "none";
-    }
-  </script>
-
-</body>
-</html>
+    <div id="joinSection">
+      <input type="text" id="playerName" placeholder="Dein Name eingeben" />
+      <
