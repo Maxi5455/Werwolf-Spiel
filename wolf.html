@@ -1,0 +1,148 @@
+<div style="margin-top: 3em;">
+  <h2>📱 Scanne den QR-Code für Handy-Zugriff:</h2>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://example.com/werwolf_randomizer.html&size=200x200" alt="QR-Code zum Spiel">
+  <p>oder besuche:<br><strong>https://example.com/werwolf_randomizer.html</strong></p>
+</div>
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Werwolf Rollenzuteilung</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Georgia', serif;
+      background: url('https://cdn.pixabay.com/photo/2017/07/31/11/22/forest-2557054_1280.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #f4f4f4;
+      text-align: center;
+      padding: 4em 2em;
+      backdrop-filter: brightness(0.6);
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 0.5em;
+      text-shadow: 2px 2px 4px #000;
+    }
+    #role {
+      font-size: 2em;
+      margin: 1em 0;
+      color: #ffe680;
+      text-shadow: 1px 1px 3px black;
+    }
+    button {
+      padding: 1em 2em;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 12px;
+      margin: 1em;
+      background-color: #4d2c00;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      background-color: #663300;
+    }
+    .hidden {
+      display: none;
+    }
+
+    /* Info Box */
+    #infoBox {
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 2em;
+      border-radius: 12px;
+      max-width: 900px;
+      margin: 2em auto;
+      text-align: left;
+      display: none;
+    }
+    #infoBox h2 {
+      text-align: center;
+      margin-bottom: 1em;
+    }
+    .role-entry {
+      margin-bottom: 1em;
+    }
+    .role-entry span {
+      font-weight: bold;
+      color: #ffe680;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧛 Werwolf-Rollen Generator</h1>
+  <p>Spieler <span id="playerNumber">1</span>, bitte klicke auf "Rolle anzeigen".</p>
+
+  <button onclick="showRole()">🎲 Rolle anzeigen</button>
+  <button onclick="nextPlayer()" class="hidden">➡️ Nächster Spieler</button>
+  <button onclick="toggleInfo()">ℹ️ Rolleninfo</button>
+
+  <div id="role"></div>
+
+  <div id="infoBox">
+    <h2>ℹ️ Rollenübersicht</h2>
+    <div class="role-entry"><span>🐺 Werwolf</span>: Trifft sich nachts mit anderen Werwölfen, wählt ein Opfer.</div>
+    <div class="role-entry"><span>🧙‍♀️ Seherin</span>: Darf jede Nacht die Rolle eines Spielers sehen.</div>
+    <div class="role-entry"><span>🧪 Hexe</span>: Hat 2 Tränke – einen zum Heilen (auch sich selbst), einen zum Töten.</div>
+    <div class="role-entry"><span>🎯 Jäger</span>: Wenn er stirbt, darf er noch einen Spieler erschießen.</div>
+    <div class="role-entry"><span>💘 Amor</span>: Wählt zwei Liebende – sie gewinnen gemeinsam, auch wenn aus verschiedenen Teams.</div>
+    <div class="role-entry"><span>🧓 Bürgermeister</span>: Wird gewählt. Hat eine doppelte Stimme bei Abstimmungen.</div>
+    <div class="role-entry"><span>🤷 Verfluchter</span>: Beginnt als Dorfbewohner, wird Werwolf, wenn er von ihnen gebissen wird (außer er wird geheilt).</div>
+    <div class="role-entry"><span>🧑 Dorfbewohner</span>: Keine Sonderfähigkeit – aber stimmen mit ab.</div>
+    <div class="role-entry"><span>❤️ Liebespaar</span>: Wenn eines stirbt, stirbt das andere aus Kummer. Ziel: zusammen überleben.</div>
+  </div>
+
+  <script>
+    const roles = [
+      "Werwolf", "Werwolf", "Werwolf", "Seherin", "Hexe",
+      "Jäger", "Amor", "Dorfbewohner", "Dorfbewohner", "Dorfbewohner",
+      "Dorfbewohner", "Dorfbewohner", "Dorfbewohner", "Dorfbewohner",
+      "Dorfbewohner", "Dorfbewohner", "Dorfbewohner", "Dorfbewohner",
+      "Verfluchter", "Bürgermeister"
+    ];
+
+    let shuffledRoles = [...roles].sort(() => Math.random() - 0.5);
+    let currentIndex = 0;
+
+    function showRole() {
+      if (currentIndex >= shuffledRoles.length) return;
+      document.getElementById('role').textContent = "🃏 Du bist: " + shuffledRoles[currentIndex];
+      document.querySelector('button').classList.add('hidden');
+      document.querySelectorAll('button')[1].classList.remove('hidden');
+    }
+
+    function nextPlayer() {
+      currentIndex++;
+      if (currentIndex < shuffledRoles.length) {
+        document.getElementById('playerNumber').textContent = currentIndex + 1;
+        document.getElementById('role').textContent = "";
+        document.querySelector('button').classList.remove('hidden');
+        document.querySelectorAll('button')[1].classList.add('hidden');
+      } else {
+        document.getElementById('role').textContent = "✅ Alle Rollen wurden verteilt.";
+        document.querySelectorAll('button')[1].classList.add('hidden');
+      }
+    }
+
+    function toggleInfo() {
+      const info = document.getElementById('infoBox');
+      info.style.display = info.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+
+</body>
+</html>
