@@ -9,11 +9,22 @@
     body {
       margin: 0;
       font-family: 'MedievalSharp', cursive;
+      transition: background 0.8s ease, color 0.8s ease;
+      overflow-x: hidden;
+    }
+    body.day {
       background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
       background-size: cover;
       color: #f7d874;
-      overflow-x: hidden;
     }
+    body.night {
+      background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #bbb; /* hellere Schrift für Nacht */
+      background-blend-mode: multiply;
+      background-color: #000a1a; /* leicht dunkle Überlagerung */
+    }
+
     .container {
       max-width: 800px;
       margin: 50px auto 50px auto;
@@ -21,11 +32,21 @@
       background-color: rgba(0, 0, 0, 0.75);
       border-radius: 16px;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      transition: background-color 0.8s ease, color 0.8s ease;
+    }
+    body.night .container {
+      background-color: rgba(15, 15, 40, 0.85);
+      box-shadow: 0 0 30px #3399ff88;
+      color: #ddd;
     }
     h1, h2, h3 {
       text-align: center;
       margin-bottom: 1rem;
       color: #ffd700;
+      transition: color 0.8s ease;
+    }
+    body.night h1, body.night h2, body.night h3 {
+      color: #66ccff;
     }
     input, button {
       padding: 0.6rem;
@@ -36,10 +57,15 @@
       width: 100%;
       box-sizing: border-box;
       font-family: 'MedievalSharp', cursive;
+      transition: background-color 0.5s ease, color 0.5s ease;
     }
     input {
       background-color: #333;
       color: #f7d874;
+    }
+    body.night input {
+      background-color: #223344;
+      color: #aaddff;
     }
     button {
       background-color: #ff9800;
@@ -67,6 +93,7 @@
       border-radius: 8px;
       background: rgba(0,0,0,0.3);
       padding: 5px;
+      transition: background-color 0.8s ease;
     }
     #impressum {
       position: fixed;
@@ -89,16 +116,20 @@
       text-align: center;
       font-size: 1.2rem;
       color: #00e5ff;
+      transition: color 0.8s ease;
+    }
+    body.night .phase {
+      color: #88bbff;
     }
   </style>
 </head>
-<body>
+<body class="day">
   <img id="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://maxi5455.github.io/Werwolf-Spiel/wolf.html" alt="QR Code">
 
   <div class="container" id="setup">
     <h1>Werwolf Spiel</h1>
     <p>Gib deinen Namen ein:</p>
-    <input id="playerName" placeholder="Dein Name" autocomplete="off">
+    <input id="playerName" placeholder="Dein Name" autocomplete="off" />
     <br />
     <button onclick="joinGame()">Rolle ziehen</button>
     <br /><br />
@@ -198,6 +229,7 @@
       document.getElementById("masterLogin").classList.add("hidden");
       document.getElementById("masterPanel").classList.remove("hidden");
       updatePlayerList();
+      applyPhaseStyle();  // Damit direkt das Styling passt
     }
 
     function updatePlayerList() {
@@ -205,7 +237,9 @@
       list.innerHTML = '';
       players.forEach((p, i) => {
         const li = document.createElement('li');
-        li.innerHTML = `${p.name} – <b>${p.role}</b> <button onclick="toggleAlive(${i})">${p.alive ? '☠️ Töten' : '♻️ Wiederbeleben'}</button> <button onclick="deletePlayer(${i})" style="background:#c0392b;color:#fff;border:none;border-radius:5px;padding:3px 6px;margin-left:10px;cursor:pointer;">Löschen</button>`;
+        li.innerHTML = `${p.name} – <b>${p.role}</b> 
+          <button onclick="toggleAlive(${i})">${p.alive ? '☠️ Töten' : '♻️ Wiederbeleben'}</button> 
+          <button onclick="deletePlayer(${i})" style="margin-left:10px; background:#d33; color:#fff;">Löschen</button>`;
         li.className = p.alive ? '' : 'dead';
         list.appendChild(li);
       });
@@ -216,9 +250,9 @@
       saveGame();
       updatePlayerList();
     }
-    
+
     function deletePlayer(index) {
-      if(confirm(`Spieler "${players[index].name}" wirklich löschen?`)){
+      if (confirm(`Spieler "${players[index].name}" wirklich löschen?`)) {
         players.splice(index, 1);
         saveGame();
         updatePlayerList();
@@ -229,6 +263,17 @@
       phase = (phase === 'Nacht') ? 'Tag' : 'Nacht';
       document.getElementById("phase").textContent = (phase === 'Nacht') ? '🌙 Nacht' : '🌞 Tag';
       saveGame();
+      applyPhaseStyle();
+    }
+
+    function applyPhaseStyle() {
+      if (phase === 'Nacht') {
+        document.body.classList.remove('day');
+        document.body.classList.add('night');
+      } else {
+        document.body.classList.remove('night');
+        document.body.classList.add('day');
+      }
     }
 
     window.onload = () => {
@@ -236,6 +281,7 @@
         document.getElementById("setup").classList.remove("hidden");
       }
       document.getElementById("phase").textContent = (phase === 'Nacht') ? '🌙 Nacht' : '🌞 Tag';
+      applyPhaseStyle();
     };
   </script>
 </body>
