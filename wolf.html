@@ -2,131 +2,146 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Werwolf Rollenzuteilung</title>
+  <title>Werwolf Spiel</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Georgia', serif;
-      background: url('https://cdn.pixabay.com/photo/2017/07/31/11/22/forest-2557054_1280.jpg') no-repeat center center fixed;
+      background: url('https://i.imgur.com/8rK39yu.jpg') no-repeat center center fixed;
       background-size: cover;
-      color: #f4f4f4;
-      text-align: center;
-      padding: 4em 2em;
-      backdrop-filter: brightness(0.6);
-    }
-    h1 {
-      font-size: 3em;
-      margin-bottom: 0.5em;
-      text-shadow: 2px 2px 4px #000;
-    }
-    #role {
-      font-size: 2em;
-      margin: 1em 0;
-      color: #ffe680;
-      text-shadow: 1px 1px 3px black;
-    }
-    button {
-      padding: 1em 2em;
-      font-size: 1.2em;
-      border: none;
-      border-radius: 12px;
-      margin: 1em;
-      background-color: #4d2c00;
       color: white;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    button:hover {
-      transform: scale(1.05);
-      background-color: #663300;
-    }
-    .hidden {
-      display: none;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
     }
 
-    /* Info Box */
-    #infoBox {
-      background: rgba(0, 0, 0, 0.8);
-      color: #fff;
-      padding: 2em;
+    h1 { color: #ffd700; }
+
+    input, button {
+      padding: 0.5em;
+      font-size: 1em;
+      margin: 0.5em;
+      border-radius: 10px;
+      border: none;
+    }
+
+    #roleSection, #masterView { display: none; }
+
+    .card {
+      background: rgba(0,0,0,0.7);
       border-radius: 12px;
-      max-width: 900px;
-      margin: 2em auto;
-      text-align: left;
-      display: none;
+      padding: 1em;
+      margin: 1em;
+      display: inline-block;
+      width: 200px;
     }
-    #infoBox h2 {
-      text-align: center;
-      margin-bottom: 1em;
+
+    .alive { background-color: rgba(0, 100, 0, 0.7); }
+    .dead { background-color: rgba(100, 0, 0, 0.7); }
+
+    .role-name {
+      font-size: 1.2em;
+      color: #fffacd;
+      margin-bottom: 0.5em;
     }
-    .role-entry {
-      margin-bottom: 1em;
-    }
-    .role-entry span {
+
+    .player-name {
       font-weight: bold;
-      color: #ffe680;
+      font-size: 1.3em;
+    }
+
+    .status-btn {
+      margin-top: 0.5em;
+      padding: 0.3em;
+      font-size: 0.9em;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🧛 Werwolf-Rollen Generator</h1>
-  <p>Spieler <span id="playerNumber">1</span>, bitte klicke auf "Rolle anzeigen".</p>
+  <h1>🐺 Werwolf Rollen-Ziehung</h1>
 
-  <button onclick="showRole()">🎲 Rolle anzeigen</button>
-  <button onclick="nextPlayer()" class="hidden">➡️ Nächster Spieler</button>
-  <button onclick="toggleInfo()">ℹ️ Rolleninfo</button>
+  <div id="joinSection">
+    <input type="text" id="playerName" placeholder="Dein Name eingeben">
+    <button onclick="drawRole()">Rolle ziehen</button>
+  </div>
 
-  <div id="role"></div>
+  <div id="roleSection">
+    <h2>Deine Rolle:</h2>
+    <p id="yourRole" class="role-name"></p>
+  </div>
 
-  <div id="infoBox">
-    <h2>ℹ️ Rollenübersicht</h2>
-    <div class="role-entry"><span>🐺 Werwolf</span>: Trifft sich nachts mit anderen Werwölfen, wählt ein Opfer.</div>
-    <div class="role-entry"><span>🧙‍♀️ Seherin</span>: Darf jede Nacht die Rolle eines Spielers sehen.</div>
-    <div class="role-entry"><span>🧪 Hexe</span>: Hat 2 Tränke – einen zum Heilen (auch sich selbst), einen zum Töten.</div>
-    <div class="role-entry"><span>🎯 Jäger</span>: Wenn er stirbt, darf er noch einen Spieler erschießen.</div>
-    <div class="role-entry"><span>💘 Amor</span>: Wählt zwei Liebende – sie gewinnen gemeinsam, auch wenn aus verschiedenen Teams.</div>
-    <div class="role-entry"><span>🧓 Bürgermeister</span>: Wird gewählt. Hat eine doppelte Stimme bei Abstimmungen.</div>
-    <div class="role-entry"><span>🤷 Verfluchter</span>: Beginnt als Dorfbewohner, wird Werwolf, wenn er von ihnen gebissen wird (außer er wird geheilt).</div>
-    <div class="role-entry"><span>🧑 Dorfbewohner</span>: Keine Sonderfähigkeit – aber stimmen mit ab.</div>
-    <div class="role-entry"><span>❤️ Liebespaar</span>: Wenn eines stirbt, stirbt das andere aus Kummer. Ziel: zusammen überleben.</div>
+  <br><br>
+  <button onclick="openMaster()">Erzählermodus</button>
+
+  <div id="masterView">
+    <h2>🎩 Erzähleransicht</h2>
+    <div id="playerCards"></div>
   </div>
 
   <script>
     const roles = [
-      "Werwolf", "Werwolf", "Werwolf", "Seherin", "Hexe",
-      "Jäger", "Amor", "Dorfbewohner", "Dorfbewohner", "Dorfbewohner",
-      "Dorfbewohner", "Dorfbewohner", "Dorfbewohner", "Dorfbewohner",
-      "Dorfbewohner", "Dorfbewohner", "Dorfbewohner", "Dorfbewohner",
-      "Verfluchter", "Bürgermeister"
+      'Werwolf', 'Werwolf',
+      'Dorfbewohner', 'Dorfbewohner', 'Dorfbewohner',
+      'Seherin', 'Hexe', 'Jäger', 'Amor',
+      'Dieb', 'Bürgermeister', 'Dorfbewohner',
+      'Werwolf', 'Dorfbewohner', 'Dorfbewohner',
+      'Dorfbewohner', 'Dorfbewohner', 'Dorfbewohner',
+      'Dorfbewohner', 'Dorfbewohner'
     ];
 
-    let shuffledRoles = [...roles].sort(() => Math.random() - 0.5);
-    let currentIndex = 0;
+    let assignedRoles = [];
+    let players = [];
 
-    function showRole() {
-      if (currentIndex >= shuffledRoles.length) return;
-      document.getElementById('role').textContent = "🃏 Du bist: " + shuffledRoles[currentIndex];
-      document.querySelector('button').classList.add('hidden');
-      document.querySelectorAll('button')[1].classList.remove('hidden');
+    function drawRole() {
+      const name = document.getElementById("playerName").value.trim();
+      if (!name) return alert("Bitte gib deinen Namen ein.");
+      if (players.find(p => p.name === name)) return alert("Dieser Name wurde schon verwendet.");
+
+      if (roles.length === 0) return alert("Es sind keine Rollen mehr verfügbar!");
+
+      const randomIndex = Math.floor(Math.random() * roles.length);
+      const role = roles.splice(randomIndex, 1)[0];
+      assignedRoles.push({ name, role, alive: true });
+      players.push({ name });
+
+      document.getElementById("yourRole").textContent = role;
+      document.getElementById("roleSection").style.display = "block";
+      document.getElementById("joinSection").style.display = "none";
     }
 
-    function nextPlayer() {
-      currentIndex++;
-      if (currentIndex < shuffledRoles.length) {
-        document.getElementById('playerNumber').textContent = currentIndex + 1;
-        document.getElementById('role').textContent = "";
-        document.querySelector('button').classList.remove('hidden');
-        document.querySelectorAll('button')[1].classList.add('hidden');
-      } else {
-        document.getElementById('role').textContent = "✅ Alle Rollen wurden verteilt.";
-        document.querySelectorAll('button')[1].classList.add('hidden');
+    function openMaster() {
+      const pw = prompt("Passwort für Erzähler:");
+      if (pw !== "9999") {
+        alert("Falsches Passwort.");
+        return;
       }
+
+      document.getElementById("masterView").style.display = "block";
+      renderMasterView();
     }
 
-    function toggleInfo() {
-      const info = document.getElementById('infoBox');
-      info.style.display = info.style.display === 'block' ? 'none' : 'block';
+    function toggleStatus(index) {
+      assignedRoles[index].alive = !assignedRoles[index].alive;
+      renderMasterView();
+    }
+
+    function renderMasterView() {
+      const container = document.getElementById("playerCards");
+      container.innerHTML = "";
+      assignedRoles.forEach((p, i) => {
+        const card = document.createElement("div");
+        card.className = "card " + (p.alive ? "alive" : "dead");
+
+        card.innerHTML = `
+          <div class="player-name">${p.name}</div>
+          <div class="role-name">${p.role}</div>
+          <button class="status-btn" onclick="toggleStatus(${i})">
+            ${p.alive ? "Lebendig" : "Tot"}
+          </button>
+        `;
+
+        container.appendChild(card);
+      });
     }
   </script>
 
