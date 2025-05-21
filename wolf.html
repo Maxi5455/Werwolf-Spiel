@@ -1,303 +1,251 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Werwolf Spiel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Open+Sans&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Open Sans', sans-serif;
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
-      background-size: cover;
-      color: #f7d874;
-      overflow-x: hidden;
-    }
-    #container {
-      max-width: 900px;
-      margin: 3em auto 5em;
-      background: rgba(18, 18, 20, 0.85);
-      border-radius: 20px;
-      padding: 2.5em 3em 3em;
-      box-shadow: 0 0 40px 6px #ffd700aa;
-    }
-    h1, h2, h3 {
-      font-family: 'Cinzel Decorative', cursive;
-      text-shadow: 2px 2px 6px #000;
-      margin-bottom: 0.7em;
-    }
-    h1 {
-      font-size: 3.2em;
-      text-align: center;
-      margin-top: 0;
-    }
-    input[type="text"], input[type="password"] {
-      font-size: 1.1em;
-      padding: 0.6em 1em;
-      border-radius: 8px;
-      border: none;
-      width: 60%;
-      max-width: 300px;
-      margin-bottom: 1.2em;
-      box-shadow: inset 1px 1px 5px #222;
-      color: #222;
-      font-weight: 600;
-      font-family: 'Open Sans', sans-serif;
-      display: inline-block;
-    }
-    button {
-      background-color: #f7d874;
-      border: none;
-      border-radius: 12px;
-      padding: 0.7em 1.6em;
-      font-weight: 700;
-      font-family: 'Cinzel Decorative', cursive;
-      font-size: 1.1em;
-      cursor: pointer;
-      color: #1a1a1a;
-      box-shadow: 0 0 12px 1px #ffd700cc;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      margin-left: 0.5em;
-      user-select: none;
-    }
-    button:hover {
-      background-color: #e5c75c;
-      color: #0d0d0d;
-    }
-    #playersList {
-      margin-top: 1em;
-      max-height: 380px;
-      overflow-y: auto;
-      padding-right: 10px;
-    }
-    .card {
-      background: rgba(255, 215, 0, 0.1);
-      margin-bottom: 1em;
-      padding: 0.9em 1.2em;
-      border-radius: 14px;
-      box-shadow: inset 0 0 15px #f7d87444;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: 600;
-      color: #f7d874;
-      font-family: 'Cinzel Decorative', cursive;
-    }
-    .player-name {
-      flex: 1.4;
-      font-size: 1.15em;
-      text-shadow: 1px 1px 3px #0008;
-    }
-    .role-name {
-      flex: 1.8;
-      text-align: center;
-      font-size: 1.05em;
-      font-style: italic;
-      color: #f7d874cc;
-      user-select: none;
-    }
-    .status-btn {
-      flex-shrink: 0;
-      background-color: #c72b2b;
-      color: white;
-      padding: 0.35em 0.75em;
-      font-family: 'Open Sans', sans-serif;
-      font-weight: 700;
-      font-size: 0.95em;
-      border-radius: 8px;
-      border: none;
-      box-shadow: 0 0 6px #c72b2bcc;
-      transition: background-color 0.3s ease;
-      user-select: none;
-      cursor: pointer;
-    }
-    .status-btn:hover {
-      background-color: #9a2020;
-    }
-    .alive {
-      background: rgba(39, 101, 39, 0.35);
-      box-shadow: inset 0 0 15px #74c574cc;
-    }
-    .dead {
-      background: rgba(120, 0, 0, 0.5);
-      box-shadow: inset 0 0 15px #ff5050cc;
-      text-decoration: line-through;
-      color: #ffa2a2;
-    }
-    #masterLogin {
-      margin-top: 3em;
-      text-align: center;
-    }
-    #masterView {
-      margin-top: 2em;
-      background: rgba(39, 39, 39, 0.95);
-      border-radius: 20px;
-      padding: 2em 2.5em;
-      max-height: 500px;
-      overflow-y: auto;
-      box-shadow: 0 0 50px 7px #ffd700bb;
-      font-family: 'Cinzel Decorative', cursive;
-      color: #f7d874;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Werwolf Spiel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+    background-size: cover;
+    color: #eee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+  #container {
+    background: rgba(0,0,0,0.7);
+    padding: 1.5rem 2rem 2rem;
+    border-radius: 12px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 0 20px #0008;
+  }
+  h1 {
+    margin-top: 0;
+    margin-bottom: 0.3em;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #ff8c00;
+    text-shadow: 0 0 8px #ff8c00aa;
+  }
+  p {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 1.2em;
+    font-size: 1rem;
+    color: #ddd;
+  }
 
-    /* Erzähler Tabelle für Beamer */
-    #masterTable {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 1.3em;
-      user-select: none;
-    }
-    #masterTable th, #masterTable td {
-      border: 2px solid #f7d874cc;
-      padding: 0.75em 1.2em;
-      text-align: center;
-    }
-    #masterTable th {
-      background: #b38f00cc;
-      text-shadow: 1px 1px 2px #000;
-    }
-    #masterTable tbody tr.alive {
-      background: rgba(39, 101, 39, 0.4);
-      color: #e9ffd9;
-      font-weight: 700;
-      box-shadow: inset 0 0 10px #74c574cc;
-    }
-    #masterTable tbody tr.dead {
-      background: rgba(120, 0, 0, 0.6);
-      color: #ffbebe;
-      text-decoration: line-through;
-      font-style: italic;
-      box-shadow: inset 0 0 12px #ff5050cc;
-    }
-    #masterTable tbody tr:hover {
-      background: #ffd70088;
-      color: #1a1a1a;
-      cursor: default;
-    }
-    #closeMasterView {
-      margin-top: 1.2em;
-      font-family: 'Cinzel Decorative', cursive;
-      font-size: 1.15em;
-      padding: 0.6em 1.5em;
-      border-radius: 14px;
-      box-shadow: 0 0 15px 4px #ffd700bb;
-      cursor: pointer;
-    }
-    #closeMasterView:hover {
-      background-color: #e5c75c;
-      color: #0d0d0d;
-    }
-    #infoBox {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(18, 18, 20, 0.95);
-      color: #f7d874;
-      border-radius: 25px;
-      padding: 2.5em 3em;
-      max-width: 520px;
-      box-shadow: 0 0 50px 10px #ffd700cc;
-      z-index: 11000;
-      font-size: 1.05em;
-      font-family: 'Cinzel Decorative', cursive;
-    }
-    #infoBox ul {
-      margin-top: 0.7em;
-      padding-left: 1.3em;
-      line-height: 1.5;
-    }
-    #infoBox li {
-      margin-bottom: 0.7em;
-    }
-    #infoBox .close-btn {
-      margin-top: 1.8em;
-      background-color: #f7d874;
-      color: #1a1a1a;
-      font-family: 'Cinzel Decorative', cursive;
-      font-size: 1.2em;
-      padding: 0.55em 1.5em;
-      border-radius: 15px;
-      box-shadow: 0 0 10px 2px #ffd700cc;
-      cursor: pointer;
-      user-select: none;
-      border: none;
-    }
-    #infoBox .close-btn:hover {
-      background-color: #e5c75c;
-    }
-    #impressum {
-      position: fixed;
-      bottom: 8px;
-      right: 12px;
-      font-size: 0.85em;
-      font-family: 'Open Sans', sans-serif;
-      color: #f7d874aa;
-      text-shadow: 1px 1px 3px #0008;
-      user-select: none;
-      z-index: 12000;
-    }
-    #masterLogin input,
-    #masterLogin button {
-      vertical-align: middle;
-    }
-    #qr {
-      position: fixed;
-      bottom: 8px;
-      left: 8px;
-      background: rgba(18, 18, 20, 0.6);
-      padding: 0.3em 0.5em;
-      border-radius: 10px;
-      box-shadow: 0 0 10px 1px #ffd70088;
-      text-align: center;
-      z-index: 10000;
-      user-select: none;
-      opacity: 0.45;
-      transition: opacity 0.3s ease;
-    }
-    #qr:hover {
-      opacity: 0.9;
-    }
-    #qr h3 {
-      font-family: 'Cinzel Decorative', cursive;
-      font-size: 1em;
-      color: #f7d874cc;
-      margin: 0 0 0.3em 0;
-      user-select: none;
-      pointer-events: none;
-    }
-    #qr img {
-      width: 60px;
-      height: 60px;
-      user-select: none;
-      pointer-events: none;
-      filter: drop-shadow(0 0 2px #0009);
-      border-radius: 8px;
-      display: block;
-      margin: 0 auto;
-    }
-  </style>
+  input[type=text], input[type=password] {
+    width: calc(100% - 12px);
+    padding: 8px 6px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    margin-bottom: 0.8em;
+  }
+  button {
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.55em 1.1em;
+    border-radius: 6px;
+    border: none;
+    background: #ff8c00;
+    color: #222;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  button:hover, button:focus {
+    background: #ffa733;
+  }
+
+  #playersList {
+    margin-top: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9em;
+    justify-content: center;
+  }
+  .card {
+    background: #222a;
+    border-radius: 8px;
+    padding: 0.7em 1em;
+    min-width: 160px;
+    max-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 10px #000a inset;
+    transition: background-color 0.3s ease;
+    color: #eee;
+    user-select: none;
+  }
+  .card.alive {
+    background-color: #224422cc;
+  }
+  .card.dead {
+    background-color: #442222cc;
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+  .player-name {
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin-bottom: 0.25em;
+    text-align: center;
+  }
+  .role-name {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: #ffa733;
+    margin-bottom: 0.5em;
+    text-align: center;
+  }
+  .status-btn {
+    background: #ff8c00;
+    border-radius: 5px;
+    border: none;
+    padding: 0.35em 0.8em;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #222;
+    transition: background 0.3s ease;
+  }
+  .status-btn:hover {
+    background: #ffa733;
+  }
+
+  #assignRolesBtn {
+    display: block;
+    margin: 1.2em auto 0 auto;
+    width: 100%;
+  }
+
+  #masterLogin {
+    margin-top: 2em;
+  }
+  #masterLogin input {
+    margin-bottom: 0.6em;
+  }
+  #masterView {
+    margin-top: 2em;
+    background: #111c2bdd;
+    border-radius: 12px;
+    padding: 1em 1.2em;
+    box-shadow: 0 0 15px #ff8c0099;
+  }
+  #masterView h2 {
+    text-align: center;
+    color: #ffb347;
+    margin-top: 0;
+    margin-bottom: 0.7em;
+  }
+  #masterTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.8em;
+  }
+  #masterTable th, #masterTable td {
+    border: 1px solid #ff8c00cc;
+    padding: 0.45em 0.6em;
+    text-align: center;
+    font-weight: 600;
+  }
+  #masterTable th {
+    background: #ff8c00cc;
+    color: #222;
+  }
+  #masterTable tbody tr.alive {
+    background: #227722aa;
+    color: #e0ffe0;
+  }
+  #masterTable tbody tr.dead {
+    background: #772222aa;
+    color: #ffcccc;
+    text-decoration: line-through;
+  }
+
+  #closeMasterView {
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    background: #cc5500;
+    color: #fff;
+  }
+  #closeMasterView:hover {
+    background: #ff6a00;
+  }
+
+  #qr {
+    position: fixed;
+    left: 12px;
+    bottom: 12px;
+    background: rgba(0,0,0,0.45);
+    padding: 6px 8px;
+    border-radius: 10px;
+    user-select: none;
+    filter: drop-shadow(0 0 2px #0009);
+    width: 80px;
+    text-align: center;
+    color: #ff8c00;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: default;
+    transition: opacity 0.3s ease;
+    opacity: 0.45;
+  }
+  #qr:hover {
+    opacity: 0.85;
+  }
+  #qr img {
+    width: 60px;
+    height: 60px;
+    margin-top: 4px;
+    border-radius: 8px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  footer {
+    margin-top: auto;
+    color: #999;
+    font-size: 0.75rem;
+    text-align: center;
+    padding: 0.5rem;
+  }
+</style>
 </head>
 <body>
   <div id="container">
     <h1>Werwolf Spiel</h1>
     <p>Spieler-Namen eingeben und Rollen werden zufällig verteilt. Danach kann der Erzähler den Überblick behalten.</p>
-    <div>
-      <input type="text" id="playerNameInput" placeholder="Neuen Spielernamen eingeben" />
-      <button id="addPlayerBtn">Spieler hinzufügen</button>
-    </div>
-    <div id="playersList"></div>
-    <button id="assignRolesBtn" style="margin-top: 1.4em;">Rollen verteilen</button>
 
-    <div id="masterLogin" style="margin-top: 2.5em;">
-      <input type="password" id="masterPassword" placeholder="Erzähler Passwort" />
+    <input type="text" id="playerNameInput" placeholder="Neuen Spielernamen eingeben" autocomplete="off" />
+    <button id="addPlayerBtn">Spieler hinzufügen</button>
+
+    <div id="playersList"></div>
+
+    <button id="assignRolesBtn">Rollen verteilen</button>
+
+    <div id="masterLogin">
+      <input type="password" id="masterPassword" placeholder="Erzähler Passwort" autocomplete="off" />
       <button id="masterLoginBtn">Erzähler Login</button>
     </div>
 
     <div id="masterView" style="display:none;">
       <h2>Erzähler Übersicht</h2>
-      <table id="masterTable">
+      <table id="masterTable" aria-label="Erzähler Spielübersicht">
         <thead>
           <tr><th>Spieler</th><th>Rolle</th><th>Status</th></tr>
         </thead>
@@ -308,21 +256,25 @@
   </div>
 
   <div id="qr" title="QR-Code zum Spiel" aria-label="QR-Code zum Spiel">
-    <h3>Spiel-App</h3>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwerwolf-spiel.example.com" alt="QR-Code" />
+    <div>Spiel-App</div>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fmaxi5455.github.io%2FWerwolf-Spiel%2Fwolf.html" alt="QR-Code" />
   </div>
+
+  <footer>
+    Erstellt von Maximilian Fischer • Seit 21.05.2025
+  </footer>
 
 <script>
   // Spieler-Array
   let players = [];
 
-  // Rollen-Liste
+  // Beispiel Rollen für 8 Spieler (du kannst anpassen)
   const roles = [
     "Werwolf",
     "Werwolf",
     "Seher",
     "Hexe",
-    "Bürger",
+    "Jäger",
     "Bürger",
     "Bürger",
     "Bürger"
@@ -339,6 +291,8 @@
   const masterTableBody = document.querySelector('#masterTable tbody');
   const closeMasterViewBtn = document.getElementById('closeMasterView');
 
+  let isMaster = false; // Erzähler-Status
+
   // Spieler hinzufügen
   addPlayerBtn.addEventListener('click', () => {
     const name = playerNameInput.value.trim();
@@ -352,45 +306,18 @@
     renderPlayersList();
   });
 
-  // Enter-Taste auch möglich zum Hinzufügen
+  // Enter-Taste für Spieler hinzufügen
   playerNameInput.addEventListener('keypress', e => {
     if (e.key === 'Enter') addPlayerBtn.click();
   });
 
-  // Spielerliste anzeigen
-  function renderPlayersList() {
-    playersList.innerHTML = '';
-    players.forEach((player, idx) => {
-      const card = document.createElement('div');
-      card.className = 'card ' + (player.alive ? 'alive' : 'dead');
-      const nameSpan = document.createElement('span');
-      nameSpan.textContent = player.name;
-      nameSpan.className = 'player-name';
-      const roleSpan = document.createElement('span');
-      roleSpan.className = 'role-name';
-      roleSpan.textContent = player.role ? player.role : '–';
-      const statusBtn = document.createElement('button');
-      statusBtn.className = 'status-btn';
-      statusBtn.textContent = player.alive ? 'Tot' : 'Lebendig';
-      statusBtn.title = player.alive ? 'Spieler auf tot setzen' : 'Spieler auf lebendig setzen';
-      statusBtn.addEventListener('click', () => {
-        player.alive = !player.alive;
-        renderPlayersList();
-      });
-      card.appendChild(nameSpan);
-      card.appendChild(roleSpan);
-      card.appendChild(statusBtn);
-      playersList.appendChild(card);
-    });
-  }
-
-  // Rollen zufällig zuweisen
+  // Rollen zufällig verteilen
   assignRolesBtn.addEventListener('click', () => {
     if (players.length < roles.length) {
       alert(`Mindestens ${roles.length} Spieler benötigt.`);
       return;
     }
-    // Shuffle roles
+    // Rollen mischen
     const shuffledRoles = roles.slice().sort(() => Math.random() - 0.5);
     for (let i = 0; i < players.length; i++) {
       players[i].role = i < shuffledRoles.length ? shuffledRoles[i] : "Bürger";
@@ -403,22 +330,68 @@
   // Erzähler Login
   masterLoginBtn.addEventListener('click', () => {
     const pw = masterPassword.value.trim();
-    if (pw === 'werwolf123') {
+    if (pw === 'werwolf123') { // Passwort hier anpassen
       masterPassword.value = '';
+      isMaster = true;
       showMasterView();
+      renderPlayersList();
     } else {
       alert('Falsches Passwort!');
     }
   });
 
+  // Erzähler Ansicht zeigen
   function showMasterView() {
     masterView.style.display = 'block';
     renderMasterTable();
   }
 
+  // Erzähler Logout / Ansicht schließen
   closeMasterViewBtn.addEventListener('click', () => {
     masterView.style.display = 'none';
+    isMaster = false;
+    renderPlayersList();
   });
+
+  // Spieler-Status umschalten (nur Erzähler kann)
+  function updateStatus(idx) {
+    if (!isMaster) return;
+    players[idx].alive = !players[idx].alive;
+    renderPlayersList();
+    renderMasterTable();
+  }
+
+  // Spieler-Übersicht rendern
+  function renderPlayersList() {
+    playersList.innerHTML = '';
+    players.forEach((player, idx) => {
+      const card = document.createElement('div');
+      card.className = 'card ' + (player.alive ? 'alive' : 'dead');
+
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = player.name;
+      nameSpan.className = 'player-name';
+
+      const roleSpan = document.createElement('span');
+      roleSpan.className = 'role-name';
+      roleSpan.textContent = player.role ? player.role : '–';
+
+      card.appendChild(nameSpan);
+      card.appendChild(roleSpan);
+
+      // Status-Button nur für Erzähler sichtbar
+      if (isMaster) {
+        const statusBtn = document.createElement('button');
+        statusBtn.className = 'status-btn';
+        statusBtn.textContent = player.alive ? 'Tot' : 'Lebendig';
+        statusBtn.title = player.alive ? 'Spieler auf tot setzen' : 'Spieler auf lebendig setzen';
+        statusBtn.addEventListener('click', () => updateStatus(idx));
+        card.appendChild(statusBtn);
+      }
+
+      playersList.appendChild(card);
+    });
+  }
 
   // Erzähler Tabelle rendern
   function renderMasterTable() {
@@ -426,54 +399,26 @@
     players.forEach(player => {
       const tr = document.createElement('tr');
       tr.className = player.alive ? 'alive' : 'dead';
+
       const tdName = document.createElement('td');
       tdName.textContent = player.name;
+
       const tdRole = document.createElement('td');
       tdRole.textContent = player.role ? player.role : '–';
+
       const tdStatus = document.createElement('td');
       tdStatus.textContent = player.alive ? 'Lebendig' : 'Tot';
+
       tr.appendChild(tdName);
       tr.appendChild(tdRole);
       tr.appendChild(tdStatus);
+
       masterTableBody.appendChild(tr);
     });
   }
 
-  // Tabelle bei Statusänderung aktualisieren
-  // Wir erweitern die Status-Button Funktion mit erneuter Master-Tabelle Render
-  function updateStatus(idx) {
-    players[idx].alive = !players[idx].alive;
-    renderPlayersList();
-    if (masterView.style.display === 'block') renderMasterTable();
-  }
-
-  // Im Spieler-Status-Button die Funktion anpassen:
-  // Deshalb neu renderPlayersList mit updateStatus ändern
-  function renderPlayersList() {
-    playersList.innerHTML = '';
-    players.forEach((player, idx) => {
-      const card = document.createElement('div');
-      card.className = 'card ' + (player.alive ? 'alive' : 'dead');
-      const nameSpan = document.createElement('span');
-      nameSpan.textContent = player.name;
-      nameSpan.className = 'player-name';
-      const roleSpan = document.createElement('span');
-      roleSpan.className = 'role-name';
-      roleSpan.textContent = player.role ? player.role : '–';
-      const statusBtn = document.createElement('button');
-      statusBtn.className = 'status-btn';
-      statusBtn.textContent = player.alive ? 'Tot' : 'Lebendig';
-      statusBtn.title = player.alive ? 'Spieler auf tot setzen' : 'Spieler auf lebendig setzen';
-      statusBtn.addEventListener('click', () => {
-        updateStatus(idx);
-      });
-      card.appendChild(nameSpan);
-      card.appendChild(roleSpan);
-      card.appendChild(statusBtn);
-      playersList.appendChild(card);
-    });
-  }
-
+  // Initial render
+  renderPlayersList();
 </script>
 </body>
 </html>
