@@ -6,197 +6,118 @@
   <title>Werwolf Spiel</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
-
     body {
       margin: 0;
       font-family: 'MedievalSharp', cursive;
-      background-image: url('https://images.unsplash.com/photo-1604086591497-e24c6409f8d0?auto=format&fit=crop&w=1470&q=80');
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
       background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      color: #fff;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      color: #f7d874;
+      overflow-x: hidden;
     }
-
     .container {
       max-width: 800px;
-      margin: 50px auto;
-      padding: 2rem 3rem;
+      margin: 50px auto 50px auto;
+      padding: 2rem;
       background-color: rgba(0, 0, 0, 0.75);
       border-radius: 16px;
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
-      border: 2px solid #ffd700;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
-
     h1, h2, h3 {
       text-align: center;
       margin-bottom: 1rem;
       color: #ffd700;
-      text-shadow: 0 0 5px #ffb700;
     }
-
     input, button {
-      padding: 0.7rem 1rem;
+      padding: 0.6rem;
       font-size: 1rem;
-      margin-top: 0.7rem;
-      border-radius: 10px;
+      margin-top: 0.5rem;
+      border-radius: 8px;
       border: none;
       width: 100%;
       box-sizing: border-box;
       font-family: 'MedievalSharp', cursive;
+    }
+    input {
+      background-color: #333;
+      color: #f7d874;
+    }
+    button {
+      background-color: #ff9800;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
       transition: background-color 0.3s ease;
     }
-
-    input {
-      background-color: #222;
-      color: #ffd700;
-      border: 1.5px solid #555;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    input::placeholder {
-      color: #999;
-      font-style: italic;
-    }
-
-    button {
-      background-color: #ffb700;
-      color: #000;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 0 10px #ffb700aa;
-      border: 2px solid transparent;
-    }
-
     button:hover {
-      background-color: #ffdb4d;
-      border-color: #ffb700;
-      box-shadow: 0 0 15px #ffd700ee;
+      background-color: #e68a00;
     }
-
     .hidden {
       display: none;
     }
-
     .dead {
-      color: #777;
+      color: #999;
       text-decoration: line-through;
     }
-
     #qr {
       position: fixed;
       top: 10px;
       left: 10px;
-      width: 70px;
+      width: 80px;
       opacity: 0.5;
-      border: 2px solid #ffd700aa;
       border-radius: 8px;
-      background: rgba(0,0,0,0.5);
-      padding: 4px;
-      transition: opacity 0.3s ease;
-      cursor: pointer;
-      z-index: 1000;
+      background: rgba(0,0,0,0.3);
+      padding: 5px;
     }
-
-    #qr:hover {
-      opacity: 0.9;
-    }
-
     #impressum {
       position: fixed;
       bottom: 10px;
       right: 10px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: #ccc;
-      text-shadow: 0 0 3px #000;
-      user-select: none;
+      font-family: 'Open Sans', sans-serif;
     }
-
     ul {
       list-style: none;
       padding: 0;
     }
-
     li {
-      margin-bottom: 0.7rem;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #444;
-      padding-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
-
-    li.dead {
-      opacity: 0.6;
-    }
-
     .phase {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       font-weight: bold;
       text-align: center;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       color: #00e5ff;
-      text-shadow: 0 0 7px #00e5ffaa;
     }
-
-    button.role-toggle {
-      margin-left: 1rem;
-      background-color: #333;
-      color: #ffd700;
-      font-weight: 700;
-      width: auto;
-      padding: 0.3rem 0.8rem;
-      border-radius: 12px;
-      box-shadow: 0 0 5px #ffd70099;
-      border: 1.5px solid #ffd700;
-      transition: background-color 0.3s ease;
-      cursor: pointer;
-      font-family: 'MedievalSharp', cursive;
-    }
-
-    button.role-toggle:hover {
-      background-color: #555;
-    }
-
-    #roleReveal {
-      text-align: center;
-      margin-top: 1rem;
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: #ffd700;
-      text-shadow: 0 0 15px #ffb700;
-      user-select: none;
-    }
-
   </style>
 </head>
 <body>
-  <img id="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://maxi5455.github.io/Werwolf-Spiel/" alt="QR Code" title="Link zur Werwolf Seite">
+  <img id="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://maxi5455.github.io/Werwolf-Spiel/" alt="QR Code">
 
   <div class="container" id="setup">
     <h1>Werwolf Spiel</h1>
     <p>Gib deinen Namen ein:</p>
-    <input id="playerName" placeholder="Dein Name" autocomplete="off" />
-    <button onclick="joinGame()">Rolle ziehen</button>
+    <input id="playerName" placeholder="Dein Name" autocomplete="off">
     <br />
+    <button onclick="joinGame()">Rolle ziehen</button>
+    <br /><br />
     <button onclick="showMasterLogin()">Ich bin der Erzähler</button>
   </div>
 
   <div class="container hidden" id="roleSection">
     <h2>Hallo <span id="playerDisplayName"></span>!</h2>
     <p>Deine Rolle ist:</p>
-    <div id="roleReveal">  
-      <span id="playerRole"></span>
+    <div id="roleReveal">
+      <h2><span id="playerRole"></span></h2>
     </div>
-    <button class="role-toggle" onclick="toggleRole()">Rolle anzeigen/verbergen</button>
+    <button onclick="toggleRole()">Rolle anzeigen/verbergen</button>
   </div>
 
   <div class="container hidden" id="masterLogin">
     <h2>Erzähler Zugang</h2>
-    <input id="masterPwd" placeholder="Passwort" type="password" autocomplete="off" />
+    <input id="masterPwd" type="password" placeholder="Passwort" autocomplete="off" />
+    <br />
     <button onclick="unlockMaster()">Login</button>
   </div>
 
@@ -222,7 +143,11 @@
   <div id="impressum">© Maximilian Fischer – seit 21.05.2025</div>
 
   <script>
-    const roles = ["Werwolf", "Werwolf", "Seher", "Hexe", "Jäger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger"];
+    const roles = [
+      "Werwolf", "Werwolf", "Seher", "Hexe", "Jäger",
+      "Bürger", "Bürger", "Bürger", "Bürger", "Bürger",
+      "Bürger", "Bürger", "Bürger", "Bürger", "Bürger"
+    ];
     let players = JSON.parse(localStorage.getItem('players')) || [];
     let assigned = !!players.length;
     let phase = localStorage.getItem('phase') || 'Nacht';
@@ -280,10 +205,7 @@
       list.innerHTML = '';
       players.forEach((p, i) => {
         const li = document.createElement('li');
-        li.innerHTML = `
-          ${p.name} – <b>${p.role}</b> 
-          <button onclick="toggleAlive(${i})">${p.alive ? '☠️ Töten' : '♻️ Wiederbeleben'}</button>
-        `;
+        li.innerHTML = `${p.name} – <b>${p.role}</b> <button onclick="toggleAlive(${i})">${p.alive ? '☠️ Töten' : '♻️ Wiederbeleben'}</button> <button onclick="deletePlayer(${i})" style="background:#c0392b;color:#fff;border:none;border-radius:5px;padding:3px 6px;margin-left:10px;cursor:pointer;">Löschen</button>`;
         li.className = p.alive ? '' : 'dead';
         list.appendChild(li);
       });
@@ -293,6 +215,14 @@
       players[index].alive = !players[index].alive;
       saveGame();
       updatePlayerList();
+    }
+    
+    function deletePlayer(index) {
+      if(confirm(`Spieler "${players[index].name}" wirklich löschen?`)){
+        players.splice(index, 1);
+        saveGame();
+        updatePlayerList();
+      }
     }
 
     function togglePhase() {
