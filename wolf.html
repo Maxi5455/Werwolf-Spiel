@@ -4,42 +4,59 @@
   <meta charset="UTF-8">
   <title>Werwolf Spiel</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&display=swap');
+
     body {
-      background: url('https://images.unsplash.com/photo-1549887534-2035c6b9f5d4?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+      background: url('https://images.unsplash.com/photo-1612890981019-4ed0b6cf0e12?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
       background-size: cover;
-      color: white;
-      font-family: sans-serif;
+      font-family: 'Cinzel Decorative', cursive;
+      color: #f0e6d2;
       text-align: center;
       padding: 2em;
     }
 
-    h1 { color: #ffd700; }
+    h1 {
+      color: #ffd700;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px black;
+    }
 
     input, button {
-      padding: 0.5em;
+      padding: 0.6em;
       font-size: 1em;
       margin: 0.5em;
       border-radius: 10px;
       border: none;
+      background: #333;
+      color: #ffd700;
+      font-family: inherit;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #555;
     }
 
     #roleSection, #masterView, #infoBox { display: none; }
 
     .card {
-      background: rgba(0,0,0,0.7);
+      background: rgba(30, 30, 30, 0.8);
+      border: 2px solid #ffd700;
       border-radius: 12px;
       padding: 1em;
       margin: 1em;
       display: inline-block;
       width: 200px;
+      color: #f8f8f8;
     }
 
-    .alive { background-color: rgba(0, 100, 0, 0.7); }
-    .dead { background-color: rgba(100, 0, 0, 0.7); }
+    .alive { border-color: #2ecc71; }
+    .dead { border-color: #e74c3c; }
 
     .role-name {
       font-size: 1.2em;
-      color: #fffacd;
+      color: #f1c40f;
       margin-bottom: 0.5em;
     }
 
@@ -53,6 +70,8 @@
       padding: 0.3em;
       font-size: 0.9em;
       border-radius: 8px;
+      background: #222;
+      color: #ccc;
     }
 
     #infoBox {
@@ -61,7 +80,7 @@
       left: 10%;
       right: 10%;
       bottom: 10%;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.95);
       padding: 2em;
       overflow-y: auto;
       border-radius: 15px;
@@ -78,6 +97,13 @@
       color: white;
       font-weight: bold;
       margin-top: 1em;
+    }
+
+    ul {
+      text-align: left;
+      max-width: 600px;
+      margin: auto;
+      color: #eee;
     }
   </style>
 </head>
@@ -96,11 +122,11 @@
   </div>
 
   <br>
-  <button onclick="openMaster()">Erzählermodus</button>
+  <button onclick="openMaster()">🎩 Erzähler-Modus</button>
   <button onclick="showInfo()">ℹ️ Rollenhilfe</button>
 
   <div id="masterView">
-    <h2>🎩 Erzähleransicht</h2>
+    <h2>🎭 Erzähleransicht</h2>
     <div id="playerCards"></div>
   </div>
 
@@ -111,15 +137,15 @@
 
   <div id="infoBox">
     <h2>📘 Rollenhilfe</h2>
-    <ul style="text-align:left; max-width: 600px; margin:auto;">
+    <ul>
       <li><b>Werwolf:</b> Tötet nachts gemeinsam einen Spieler.</li>
-      <li><b>Dorfbewohner:</b> Hat keine besondere Fähigkeit, muss Werwölfe entlarven.</li>
-      <li><b>Seherin:</b> Darf jede Nacht die Rolle eines Spielers sehen.</li>
-      <li><b>Hexe:</b> Hat zwei Tränke: einen Heil- und einen Gifttrank.</li>
-      <li><b>Jäger:</b> Darf beim Tod einen anderen Spieler mit in den Tod reißen.</li>
-      <li><b>Amor:</b> Verkuppelt zwei Spieler zu Liebenden – sterben gemeinsam.</li>
+      <li><b>Dorfbewohner:</b> Keine Fähigkeit, muss Werwölfe entlarven.</li>
+      <li><b>Seherin:</b> Sieht jede Nacht die Rolle eines Spielers.</li>
+      <li><b>Hexe:</b> Hat zwei Tränke: Heilung & Vergiftung.</li>
+      <li><b>Jäger:</b> Reißt beim Tod einen Spieler mit.</li>
+      <li><b>Amor:</b> Verbindet zwei Spieler zu Liebenden.</li>
       <li><b>Dieb:</b> Wählt zu Beginn zwischen zwei Extra-Rollen.</li>
-      <li><b>Bürgermeister:</b> Hat bei Gleichstand das entscheidende Stimmrecht.</li>
+      <li><b>Bürgermeister:</b> Entscheidet bei Stimmengleichstand.</li>
     </ul>
     <button class="close-btn" onclick="hideInfo()">Schließen</button>
   </div>
