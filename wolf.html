@@ -245,4 +245,184 @@
 
     <div id="joinSection">
       <input type="text" id="playerName" placeholder="Dein Name eingeben" />
-      <
+      <button id="joinBtn">Spieler hinzufügen</button>
+    </div>
+
+    <div id="roleSection">
+      <h2>Spieler und Rollen</h2>
+      <div id="playersList"></div>
+      <button id="drawRoleBtn">Karte ziehen</button>
+    </div>
+
+    <div id="masterLogin">
+      <input type="password" id="masterPass" placeholder="Erzähler Passwort" />
+      <button id="masterLoginBtn">Erzähler-Übersicht öffnen</button>
+    </div>
+
+    <div id="masterView" style="display:none;">
+      <h2>Erzähler Übersicht</h2>
+      <div id="masterList"></div>
+      <button id="closeMasterView">Schließen</button>
+    </div>
+
+    <button id="infoBtn" style="margin-top: 2em;">ℹ️ Rollen Info</button>
+
+    <div id="qr">
+      <h3>QR-Code zur Seite</h3>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maxi5455.github.io/Werwolf-Spiel/wolf.html" alt="QR Code" />
+    </div>
+  </div>
+
+  <div id="infoBox" style="display:none;">
+    <h2>Rollen Beschreibung</h2>
+    <ul>
+      <li><strong>Werwolf:</strong> Kennt andere Werwölfe, wählt nachts ein Opfer.</li>
+      <li><strong>Seherin:</strong> Darf jede Nacht die Rolle eines Spielers erfahren.</li>
+      <li><strong>Hexe:</strong> Hat zwei Tränke – einen zum Heilen, einen zum Töten.</li>
+      <li><strong>Bürger:</strong> Keine besonderen Fähigkeiten, versucht zu überleben.</li>
+      <li><strong>Jäger:</strong> Wenn er stirbt, kann er noch einen Spieler erschießen.</li>
+      <li><strong>Amor:</strong> Verbindet zwei Spieler als Liebespaar, die zusammen gewinnen.</li>
+      <li><strong>Dieb:</strong> Kann zu Spielbeginn seine Rolle tauschen.</li>
+    </ul>
+    <button class="close-btn" id="closeInfoBtn">Schließen</button>
+  </div>
+
+  <div id="impressum">
+    Erstellt von Maximilian Fischer · Seit 21.05.2025
+  </div>
+
+  <script>
+    // Rollen Definition für 20 Spieler
+    const roles = [
+      "Werwolf", "Werwolf", "Werwolf", "Seherin", "Hexe", "Jäger",
+      "Amor", "Dieb",
+      "Bürger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger",
+      "Bürger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger"
+    ];
+
+    let players = [];
+    let rolesPool = [...roles];
+    let drawnRoles = {};
+
+    const playerNameInput = document.getElementById("playerName");
+    const joinBtn = document.getElementById("joinBtn");
+    const roleSection = document.getElementById("roleSection");
+    const playersList = document.getElementById("playersList");
+    const drawRoleBtn = document.getElementById("drawRoleBtn");
+    const infoBtn = document.getElementById("infoBtn");
+    const infoBox = document.getElementById("infoBox");
+    const closeInfoBtn = document.getElementById("closeInfoBtn");
+    const masterPassInput = document.getElementById("masterPass");
+    const masterLoginBtn = document.getElementById("masterLoginBtn");
+    const masterView = document.getElementById("masterView");
+    const masterList = document.getElementById("masterList");
+    const closeMasterViewBtn = document.getElementById("closeMasterView");
+
+    joinBtn.addEventListener("click", () => {
+      const name = playerNameInput.value.trim();
+      if (name === "") {
+        alert("Bitte gib deinen Namen ein!");
+        return;
+      }
+      if (players.includes(name)) {
+        alert("Dieser Name wurde bereits eingetragen!");
+        return;
+      }
+      if (players.length >= 20) {
+        alert("Maximal 20 Spieler erlaubt.");
+        return;
+      }
+      players.push(name);
+      updatePlayersList();
+      playerNameInput.value = "";
+      roleSection.style.display = "block";
+    });
+
+    function updatePlayersList() {
+      playersList.innerHTML = "";
+      players.forEach(name => {
+        const pDiv = document.createElement("div");
+        pDiv.className = "card alive";
+        pDiv.id = "player-" + name;
+
+        const nameEl = document.createElement("div");
+        nameEl.className = "player-name";
+        nameEl.textContent = name;
+
+        const roleEl = document.createElement("div");
+        roleEl.className = "role-name";
+        roleEl.textContent = drawnRoles[name] ? drawnRoles[name] : "Noch keine Karte gezogen";
+
+        const statusBtn = document.createElement("button");
+        statusBtn.className = "status-btn";
+        statusBtn.textContent = "Tot / Lebendig";
+        statusBtn.onclick = () => {
+          if (pDiv.classList.contains("dead")) {
+            pDiv.classList.remove("dead");
+            pDiv.classList.add("alive");
+          } else {
+            pDiv.classList.remove("alive");
+            pDiv.classList.add("dead");
+          }
+        };
+
+        pDiv.appendChild(nameEl);
+        pDiv.appendChild(roleEl);
+        pDiv.appendChild(statusBtn);
+
+        playersList.appendChild(pDiv);
+      });
+    }
+
+    drawRoleBtn.addEventListener("click", () => {
+      if (players.length === 0) {
+        alert("Bitte füge zuerst Spieler hinzu.");
+        return;
+      }
+      players.forEach(name => {
+        if (!drawnRoles[name]) {
+          if (rolesPool.length === 0) {
+            alert("Alle Rollen sind verteilt.");
+            return;
+          }
+          const idx = Math.floor(Math.random() * rolesPool.length);
+          const role = rolesPool.splice(idx, 1)[0];
+          drawnRoles[name] = role;
+        }
+      });
+      updatePlayersList();
+    });
+
+    infoBtn.addEventListener("click", () => {
+      infoBox.style.display = "block";
+    });
+
+    closeInfoBtn.addEventListener("click", () => {
+      infoBox.style.display = "none";
+    });
+
+    masterLoginBtn.addEventListener("click", () => {
+      if (masterPassInput.value === "9999") {
+        buildMasterView();
+        masterView.style.display = "block";
+      } else {
+        alert("Falsches Passwort!");
+      }
+    });
+
+    closeMasterViewBtn.addEventListener("click", () => {
+      masterView.style.display = "none";
+    });
+
+    function buildMasterView() {
+      masterList.innerHTML = "";
+      players.forEach(name => {
+        const cardDiv = document.createElement("div");
+        cardDiv.className = drawnRoles[name] ? "card alive" : "card";
+        cardDiv.textContent = name + " - " + (drawnRoles[name] || "Keine Rolle");
+        masterList.appendChild(cardDiv);
+      });
+    }
+  </script>
+</body>
+</html>
