@@ -6,7 +6,6 @@
   <title>Werwolf Spiel</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Open+Sans&display=swap" rel="stylesheet" />
   <style>
-    /* Grundstil */
     body {
       margin: 0;
       font-family: 'Open Sans', sans-serif;
@@ -15,8 +14,6 @@
       color: #f7d874;
       overflow-x: hidden;
     }
-
-    /* Transparenter Container */
     #container {
       max-width: 900px;
       margin: 3em auto 5em;
@@ -25,20 +22,16 @@
       padding: 2.5em 3em 3em;
       box-shadow: 0 0 40px 6px #ffd700aa;
     }
-
     h1, h2, h3 {
       font-family: 'Cinzel Decorative', cursive;
       text-shadow: 2px 2px 6px #000;
       margin-bottom: 0.7em;
     }
-
     h1 {
       font-size: 3.2em;
       text-align: center;
       margin-top: 0;
     }
-
-    /* Eingabefelder (Name & Passwort) */
     input[type="text"], input[type="password"] {
       font-size: 1.1em;
       padding: 0.6em 1em;
@@ -53,8 +46,6 @@
       font-family: 'Open Sans', sans-serif;
       display: inline-block;
     }
-
-    /* Buttons */
     button {
       background-color: #f7d874;
       border: none;
@@ -74,16 +65,12 @@
       background-color: #e5c75c;
       color: #0d0d0d;
     }
-
-    /* Spieler-Liste */
     #playersList {
       margin-top: 1em;
       max-height: 380px;
       overflow-y: auto;
       padding-right: 10px;
     }
-
-    /* Spielerkarte */
     .card {
       background: rgba(255, 215, 0, 0.1);
       margin-bottom: 1em;
@@ -97,13 +84,11 @@
       color: #f7d874;
       font-family: 'Cinzel Decorative', cursive;
     }
-
     .player-name {
       flex: 1.4;
       font-size: 1.15em;
       text-shadow: 1px 1px 3px #0008;
     }
-
     .role-name {
       flex: 1.8;
       text-align: center;
@@ -112,8 +97,6 @@
       color: #f7d874cc;
       user-select: none;
     }
-
-    /* Status-Button */
     .status-btn {
       flex-shrink: 0;
       background-color: #c72b2b;
@@ -132,8 +115,6 @@
     .status-btn:hover {
       background-color: #9a2020;
     }
-
-    /* Status lebendig/tot */
     .alive {
       background: rgba(39, 101, 39, 0.35);
       box-shadow: inset 0 0 15px #74c574cc;
@@ -144,34 +125,69 @@
       text-decoration: line-through;
       color: #ffa2a2;
     }
-
-    /* Erzähler Login */
     #masterLogin {
       margin-top: 3em;
       text-align: center;
     }
-
-    /* Erzähler Übersicht */
     #masterView {
       margin-top: 2em;
-      background: rgba(39, 39, 39, 0.85);
+      background: rgba(39, 39, 39, 0.95);
       border-radius: 20px;
-      padding: 1.5em 2em;
-      max-height: 400px;
+      padding: 2em 2.5em;
+      max-height: 500px;
       overflow-y: auto;
-      box-shadow: 0 0 40px 5px #ffd700bb;
+      box-shadow: 0 0 50px 7px #ffd700bb;
+      font-family: 'Cinzel Decorative', cursive;
+      color: #f7d874;
     }
 
-    /* Erzähler Karten */
-    #masterList .card {
-      font-size: 1.15em;
-      margin-bottom: 0.7em;
+    /* Erzähler Tabelle für Beamer */
+    #masterTable {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1.3em;
+      user-select: none;
+    }
+    #masterTable th, #masterTable td {
+      border: 2px solid #f7d874cc;
+      padding: 0.75em 1.2em;
+      text-align: center;
+    }
+    #masterTable th {
+      background: #b38f00cc;
+      text-shadow: 1px 1px 2px #000;
+    }
+    #masterTable tbody tr.alive {
+      background: rgba(39, 101, 39, 0.4);
+      color: #e9ffd9;
+      font-weight: 700;
+      box-shadow: inset 0 0 10px #74c574cc;
+    }
+    #masterTable tbody tr.dead {
+      background: rgba(120, 0, 0, 0.6);
+      color: #ffbebe;
+      text-decoration: line-through;
+      font-style: italic;
+      box-shadow: inset 0 0 12px #ff5050cc;
+    }
+    #masterTable tbody tr:hover {
+      background: #ffd70088;
+      color: #1a1a1a;
       cursor: default;
-      justify-content: flex-start;
-      padding-left: 1.2em;
     }
-
-    /* Rollen Info Overlay */
+    #closeMasterView {
+      margin-top: 1.2em;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.15em;
+      padding: 0.6em 1.5em;
+      border-radius: 14px;
+      box-shadow: 0 0 15px 4px #ffd700bb;
+      cursor: pointer;
+    }
+    #closeMasterView:hover {
+      background-color: #e5c75c;
+      color: #0d0d0d;
+    }
     #infoBox {
       position: fixed;
       top: 50%;
@@ -211,8 +227,6 @@
     #infoBox .close-btn:hover {
       background-color: #e5c75c;
     }
-
-    /* Impressum unten rechts */
     #impressum {
       position: fixed;
       bottom: 8px;
@@ -224,238 +238,242 @@
       user-select: none;
       z-index: 12000;
     }
-
-    /* Passwortfeld & Button nebeneinander */
     #masterLogin input,
     #masterLogin button {
       vertical-align: middle;
     }
-
-    /* QR-Code unten links fixiert */
     #qr {
       position: fixed;
-      bottom: 15px;
-      left: 15px;
-      background: rgba(18, 18, 20, 0.85);
-      padding: 0.7em 1em;
-      border-radius: 15px;
-      box-shadow: 0 0 15px 3px #ffd700aa;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(18, 18, 20, 0.6);
+      padding: 0.3em 0.5em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px 1px #ffd70088;
       text-align: center;
       z-index: 10000;
       user-select: none;
+      opacity: 0.45;
+      transition: opacity 0.3s ease;
     }
-
+    #qr:hover {
+      opacity: 0.9;
+    }
     #qr h3 {
       font-family: 'Cinzel Decorative', cursive;
-      font-size: 1.3em;
-      color: #f7d874;
-      margin-bottom: 0.5em;
-      text-shadow: 1px 1px 3px #000;
+      font-size: 1em;
+      color: #f7d874cc;
+      margin: 0 0 0.3em 0;
+      user-select: none;
+      pointer-events: none;
     }
-
     #qr img {
-      width: 180px;
-      height: 180px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px 3px #ffd700cc;
-    }
-
-    /* Scrollbar für Spielerlisten */
-    #playersList::-webkit-scrollbar,
-    #masterList::-webkit-scrollbar {
-      width: 8px;
-    }
-    #playersList::-webkit-scrollbar-thumb,
-    #masterList::-webkit-scrollbar-thumb {
-      background: #f7d874aa;
-      border-radius: 6px;
+      width: 60px;
+      height: 60px;
+      user-select: none;
+      pointer-events: none;
+      filter: drop-shadow(0 0 2px #0009);
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto;
     }
   </style>
 </head>
 <body>
   <div id="container">
     <h1>Werwolf Spiel</h1>
-
-    <div id="joinSection" style="text-align:center;">
-      <input type="text" id="playerName" placeholder="Dein Name" autocomplete="off" />
-      <button id="joinBtn">Spieler hinzufügen</button>
+    <p>Spieler-Namen eingeben und Rollen werden zufällig verteilt. Danach kann der Erzähler den Überblick behalten.</p>
+    <div>
+      <input type="text" id="playerNameInput" placeholder="Neuen Spielernamen eingeben" />
+      <button id="addPlayerBtn">Spieler hinzufügen</button>
     </div>
+    <div id="playersList"></div>
+    <button id="assignRolesBtn" style="margin-top: 1.4em;">Rollen verteilen</button>
 
-    <div id="roleSection" style="display:none;">
-      <h2>Spieler und Rollen</h2>
-      <div id="playersList"></div>
-      <button id="drawRoleBtn" style="margin-top: 1em;">Karte ziehen</button>
-    </div>
-
-    <div id="masterLogin" style="margin-top:3em; text-align:center;">
-      <input type="password" id="masterPass" placeholder="Erzähler Passwort" autocomplete="off" />
-      <button id="masterLoginBtn">Erzähler-Übersicht öffnen</button>
+    <div id="masterLogin" style="margin-top: 2.5em;">
+      <input type="password" id="masterPassword" placeholder="Erzähler Passwort" />
+      <button id="masterLoginBtn">Erzähler Login</button>
     </div>
 
     <div id="masterView" style="display:none;">
       <h2>Erzähler Übersicht</h2>
-      <div id="masterList"></div>
-      <button id="closeMasterView" style="margin-top:1em;">Schließen</button>
+      <table id="masterTable">
+        <thead>
+          <tr><th>Spieler</th><th>Rolle</th><th>Status</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button id="closeMasterView">Erzähler Übersicht schließen</button>
     </div>
-
-    <button id="infoBtn" style="margin-top: 2em; display: block; margin-left:auto; margin-right:auto;">ℹ️ Rollen Info</button>
   </div>
 
-  <div id="qr">
-    <h3>QR-Code zur Seite</h3>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://maxi5455.github.io/Werwolf-Spiel/wolf.html" alt="QR Code" />
+  <div id="qr" title="QR-Code zum Spiel" aria-label="QR-Code zum Spiel">
+    <h3>Spiel-App</h3>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fwerwolf-spiel.example.com" alt="QR-Code" />
   </div>
 
-  <div id="infoBox" style="display:none;">
-    <h2>Rollen Beschreibung</h2>
-    <ul>
-      <li><strong>Werwolf:</strong> Kennt andere Werwölfe, wählt nachts ein Opfer.</li>
-      <li><strong>Seherin:</strong> Darf jede Nacht die Rolle eines Spielers erfahren.</li>
-      <li><strong>Hexe:</strong> Hat zwei Tränke – einen zum Heilen, einen zum Töten.</li>
-      <li><strong>Bürger:</strong> Keine besonderen Fähigkeiten, versucht zu überleben.</li>
-      <li><strong>Jäger:</strong> Wenn er stirbt, kann er noch einen Spieler erschießen.</li>
-      <li><strong>Amor:</strong> Verbindet zwei Spieler als Liebespaar, die zusammen gewinnen.</li>
-      <li><strong>Dieb:</strong> Kann zu Spielbeginn seine Rolle tauschen.</li>
-    </ul>
-    <button class="close-btn" id="closeInfoBtn">Schließen</button>
-  </div>
+<script>
+  // Spieler-Array
+  let players = [];
 
-  <div id="impressum">
-    Erstellt von Maximilian Fischer · Seit 21.05.2025
-  </div>
+  // Rollen-Liste
+  const roles = [
+    "Werwolf",
+    "Werwolf",
+    "Seher",
+    "Hexe",
+    "Bürger",
+    "Bürger",
+    "Bürger",
+    "Bürger"
+  ];
 
-  <script>
-    // Rollen Definition für 20 Spieler
-    const roles = [
-      "Werwolf", "Werwolf", "Werwolf", "Seherin", "Hexe", "Jäger",
-      "Amor", "Dieb",
-      "Bürger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger",
-      "Bürger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger"
-    ];
+  // DOM Elemente
+  const playerNameInput = document.getElementById('playerNameInput');
+  const addPlayerBtn = document.getElementById('addPlayerBtn');
+  const playersList = document.getElementById('playersList');
+  const assignRolesBtn = document.getElementById('assignRolesBtn');
+  const masterLoginBtn = document.getElementById('masterLoginBtn');
+  const masterPassword = document.getElementById('masterPassword');
+  const masterView = document.getElementById('masterView');
+  const masterTableBody = document.querySelector('#masterTable tbody');
+  const closeMasterViewBtn = document.getElementById('closeMasterView');
 
-    let players = [];
-    let rolesPool = [...roles];
-    let drawnRoles = {};
-
-    const playerNameInput = document.getElementById("playerName");
-    const joinBtn = document.getElementById("joinBtn");
-    const roleSection = document.getElementById("roleSection");
-    const playersList = document.getElementById("playersList");
-    const drawRoleBtn = document.getElementById("drawRoleBtn");
-    const infoBtn = document.getElementById("infoBtn");
-    const infoBox = document.getElementById("infoBox");
-    const closeInfoBtn = document.getElementById("closeInfoBtn");
-    const masterPassInput = document.getElementById("masterPass");
-    const masterLoginBtn = document.getElementById("masterLoginBtn");
-    const masterView = document.getElementById("masterView");
-    const masterList = document.getElementById("masterList");
-    const closeMasterViewBtn = document.getElementById("closeMasterView");
-
-    joinBtn.addEventListener("click", () => {
-      const name = playerNameInput.value.trim();
-      if (name === "") {
-        alert("Bitte gib deinen Namen ein!");
-        return;
-      }
-      if (players.includes(name)) {
-        alert("Dieser Name wurde bereits eingetragen!");
-        return;
-      }
-      if (players.length >= 20) {
-        alert("Maximal 20 Spieler erlaubt.");
-        return;
-      }
-      players.push(name);
-      updatePlayersList();
-      playerNameInput.value = "";
-      roleSection.style.display = "block";
-    });
-
-    function updatePlayersList() {
-      playersList.innerHTML = "";
-      players.forEach(name => {
-        const pDiv = document.createElement("div");
-        pDiv.className = "card alive";
-        pDiv.id = "player-" + name;
-
-        const nameEl = document.createElement("div");
-        nameEl.className = "player-name";
-        nameEl.textContent = name;
-
-        const roleEl = document.createElement("div");
-        roleEl.className = "role-name";
-        roleEl.textContent = drawnRoles[name] ? drawnRoles[name] : "Noch keine Karte gezogen";
-
-        const statusBtn = document.createElement("button");
-        statusBtn.className = "status-btn";
-        statusBtn.textContent = "Tot / Lebendig";
-        statusBtn.onclick = () => {
-          if (pDiv.classList.contains("dead")) {
-            pDiv.classList.remove("dead");
-            pDiv.classList.add("alive");
-          } else {
-            pDiv.classList.remove("alive");
-            pDiv.classList.add("dead");
-          }
-        };
-
-        pDiv.appendChild(nameEl);
-        pDiv.appendChild(roleEl);
-        pDiv.appendChild(statusBtn);
-
-        playersList.appendChild(pDiv);
-      });
+  // Spieler hinzufügen
+  addPlayerBtn.addEventListener('click', () => {
+    const name = playerNameInput.value.trim();
+    if (!name) return alert('Bitte einen Spielernamen eingeben.');
+    if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) {
+      alert('Dieser Name ist bereits vergeben.');
+      return;
     }
+    players.push({ name: name, role: null, alive: true });
+    playerNameInput.value = '';
+    renderPlayersList();
+  });
 
-    drawRoleBtn.addEventListener("click", () => {
-      if (players.length === 0) {
-        alert("Bitte füge zuerst Spieler hinzu.");
-        return;
-      }
-      players.forEach(name => {
-        if (!drawnRoles[name]) {
-          if (rolesPool.length === 0) {
-            alert("Alle Rollen sind verteilt.");
-            return;
-          }
-          const idx = Math.floor(Math.random() * rolesPool.length);
-          const role = rolesPool.splice(idx, 1)[0];
-          drawnRoles[name] = role;
-        }
+  // Enter-Taste auch möglich zum Hinzufügen
+  playerNameInput.addEventListener('keypress', e => {
+    if (e.key === 'Enter') addPlayerBtn.click();
+  });
+
+  // Spielerliste anzeigen
+  function renderPlayersList() {
+    playersList.innerHTML = '';
+    players.forEach((player, idx) => {
+      const card = document.createElement('div');
+      card.className = 'card ' + (player.alive ? 'alive' : 'dead');
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = player.name;
+      nameSpan.className = 'player-name';
+      const roleSpan = document.createElement('span');
+      roleSpan.className = 'role-name';
+      roleSpan.textContent = player.role ? player.role : '–';
+      const statusBtn = document.createElement('button');
+      statusBtn.className = 'status-btn';
+      statusBtn.textContent = player.alive ? 'Tot' : 'Lebendig';
+      statusBtn.title = player.alive ? 'Spieler auf tot setzen' : 'Spieler auf lebendig setzen';
+      statusBtn.addEventListener('click', () => {
+        player.alive = !player.alive;
+        renderPlayersList();
       });
-      updatePlayersList();
+      card.appendChild(nameSpan);
+      card.appendChild(roleSpan);
+      card.appendChild(statusBtn);
+      playersList.appendChild(card);
     });
+  }
 
-    infoBtn.addEventListener("click", () => {
-      infoBox.style.display = "block";
-    });
-
-    closeInfoBtn.addEventListener("click", () => {
-      infoBox.style.display = "none";
-    });
-
-    masterLoginBtn.addEventListener("click", () => {
-      if (masterPassInput.value === "9999") {
-        buildMasterView();
-        masterView.style.display = "block";
-      } else {
-        alert("Falsches Passwort!");
-      }
-    });
-
-    closeMasterViewBtn.addEventListener("click", () => {
-      masterView.style.display = "none";
-    });
-
-    function buildMasterView() {
-      masterList.innerHTML = "";
-      players.forEach(name => {
-        const cardDiv = document.createElement("div");
-        cardDiv.className = drawnRoles[name] ? "card alive" : "card";
-        cardDiv.textContent = name + " - " + (drawnRoles[name] || "Keine Rolle");
-        masterList.appendChild(cardDiv);
-      });
+  // Rollen zufällig zuweisen
+  assignRolesBtn.addEventListener('click', () => {
+    if (players.length < roles.length) {
+      alert(`Mindestens ${roles.length} Spieler benötigt.`);
+      return;
     }
-  </script>
+    // Shuffle roles
+    const shuffledRoles = roles.slice().sort(() => Math.random() - 0.5);
+    for (let i = 0; i < players.length; i++) {
+      players[i].role = i < shuffledRoles.length ? shuffledRoles[i] : "Bürger";
+      players[i].alive = true;
+    }
+    renderPlayersList();
+    alert('Rollen wurden verteilt!');
+  });
+
+  // Erzähler Login
+  masterLoginBtn.addEventListener('click', () => {
+    const pw = masterPassword.value.trim();
+    if (pw === 'werwolf123') {
+      masterPassword.value = '';
+      showMasterView();
+    } else {
+      alert('Falsches Passwort!');
+    }
+  });
+
+  function showMasterView() {
+    masterView.style.display = 'block';
+    renderMasterTable();
+  }
+
+  closeMasterViewBtn.addEventListener('click', () => {
+    masterView.style.display = 'none';
+  });
+
+  // Erzähler Tabelle rendern
+  function renderMasterTable() {
+    masterTableBody.innerHTML = '';
+    players.forEach(player => {
+      const tr = document.createElement('tr');
+      tr.className = player.alive ? 'alive' : 'dead';
+      const tdName = document.createElement('td');
+      tdName.textContent = player.name;
+      const tdRole = document.createElement('td');
+      tdRole.textContent = player.role ? player.role : '–';
+      const tdStatus = document.createElement('td');
+      tdStatus.textContent = player.alive ? 'Lebendig' : 'Tot';
+      tr.appendChild(tdName);
+      tr.appendChild(tdRole);
+      tr.appendChild(tdStatus);
+      masterTableBody.appendChild(tr);
+    });
+  }
+
+  // Tabelle bei Statusänderung aktualisieren
+  // Wir erweitern die Status-Button Funktion mit erneuter Master-Tabelle Render
+  function updateStatus(idx) {
+    players[idx].alive = !players[idx].alive;
+    renderPlayersList();
+    if (masterView.style.display === 'block') renderMasterTable();
+  }
+
+  // Im Spieler-Status-Button die Funktion anpassen:
+  // Deshalb neu renderPlayersList mit updateStatus ändern
+  function renderPlayersList() {
+    playersList.innerHTML = '';
+    players.forEach((player, idx) => {
+      const card = document.createElement('div');
+      card.className = 'card ' + (player.alive ? 'alive' : 'dead');
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = player.name;
+      nameSpan.className = 'player-name';
+      const roleSpan = document.createElement('span');
+      roleSpan.className = 'role-name';
+      roleSpan.textContent = player.role ? player.role : '–';
+      const statusBtn = document.createElement('button');
+      statusBtn.className = 'status-btn';
+      statusBtn.textContent = player.alive ? 'Tot' : 'Lebendig';
+      statusBtn.title = player.alive ? 'Spieler auf tot setzen' : 'Spieler auf lebendig setzen';
+      statusBtn.addEventListener('click', () => {
+        updateStatus(idx);
+      });
+      card.appendChild(nameSpan);
+      card.appendChild(roleSpan);
+      card.appendChild(statusBtn);
+      playersList.appendChild(card);
+    });
+  }
+
+</script>
 </body>
 </html>
