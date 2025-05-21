@@ -5,7 +5,7 @@
   <title>Werwolf Spiel</title>
   <style>
     body {
-      background: url('https://i.imgur.com/8rK39yu.jpg') no-repeat center center fixed;
+      background: url('https://images.unsplash.com/photo-1549887534-2035c6b9f5d4?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
       background-size: cover;
       color: white;
       font-family: sans-serif;
@@ -23,7 +23,7 @@
       border: none;
     }
 
-    #roleSection, #masterView { display: none; }
+    #roleSection, #masterView, #infoBox { display: none; }
 
     .card {
       background: rgba(0,0,0,0.7);
@@ -54,6 +54,31 @@
       font-size: 0.9em;
       border-radius: 8px;
     }
+
+    #infoBox {
+      position: fixed;
+      top: 10%;
+      left: 10%;
+      right: 10%;
+      bottom: 10%;
+      background: rgba(0,0,0,0.9);
+      padding: 2em;
+      overflow-y: auto;
+      border-radius: 15px;
+      z-index: 1000;
+    }
+
+    #infoBox h2 { color: #ffd700; }
+    #qr {
+      margin-top: 2em;
+    }
+
+    .close-btn {
+      background: #900;
+      color: white;
+      font-weight: bold;
+      margin-top: 1em;
+    }
   </style>
 </head>
 <body>
@@ -70,12 +95,33 @@
     <p id="yourRole" class="role-name"></p>
   </div>
 
-  <br><br>
+  <br>
   <button onclick="openMaster()">Erzählermodus</button>
+  <button onclick="showInfo()">ℹ️ Rollenhilfe</button>
 
   <div id="masterView">
     <h2>🎩 Erzähleransicht</h2>
     <div id="playerCards"></div>
+  </div>
+
+  <div id="qr">
+    <h3>📱 QR-Code zum Spiel</h3>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://maxi5455.github.io/Werwolf-Spiel/wolf.html&size=200x200" alt="QR Code">
+  </div>
+
+  <div id="infoBox">
+    <h2>📘 Rollenhilfe</h2>
+    <ul style="text-align:left; max-width: 600px; margin:auto;">
+      <li><b>Werwolf:</b> Tötet nachts gemeinsam einen Spieler.</li>
+      <li><b>Dorfbewohner:</b> Hat keine besondere Fähigkeit, muss Werwölfe entlarven.</li>
+      <li><b>Seherin:</b> Darf jede Nacht die Rolle eines Spielers sehen.</li>
+      <li><b>Hexe:</b> Hat zwei Tränke: einen Heil- und einen Gifttrank.</li>
+      <li><b>Jäger:</b> Darf beim Tod einen anderen Spieler mit in den Tod reißen.</li>
+      <li><b>Amor:</b> Verkuppelt zwei Spieler zu Liebenden – sterben gemeinsam.</li>
+      <li><b>Dieb:</b> Wählt zu Beginn zwischen zwei Extra-Rollen.</li>
+      <li><b>Bürgermeister:</b> Hat bei Gleichstand das entscheidende Stimmrecht.</li>
+    </ul>
+    <button class="close-btn" onclick="hideInfo()">Schließen</button>
   </div>
 
   <script>
@@ -96,7 +142,6 @@
       const name = document.getElementById("playerName").value.trim();
       if (!name) return alert("Bitte gib deinen Namen ein.");
       if (players.find(p => p.name === name)) return alert("Dieser Name wurde schon verwendet.");
-
       if (roles.length === 0) return alert("Es sind keine Rollen mehr verfügbar!");
 
       const randomIndex = Math.floor(Math.random() * roles.length);
@@ -142,6 +187,14 @@
 
         container.appendChild(card);
       });
+    }
+
+    function showInfo() {
+      document.getElementById("infoBox").style.display = "block";
+    }
+
+    function hideInfo() {
+      document.getElementById("infoBox").style.display = "none";
     }
   </script>
 
