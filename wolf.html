@@ -1,424 +1,211 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Werwolf Spiel</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
-    background-size: cover;
-    color: #eee;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-  }
-  #container {
-    background: rgba(0,0,0,0.7);
-    padding: 1.5rem 2rem 2rem;
-    border-radius: 12px;
-    max-width: 480px;
-    width: 100%;
-    box-shadow: 0 0 20px #0008;
-  }
-  h1 {
-    margin-top: 0;
-    margin-bottom: 0.3em;
-    text-align: center;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    color: #ff8c00;
-    text-shadow: 0 0 8px #ff8c00aa;
-  }
-  p {
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 1.2em;
-    font-size: 1rem;
-    color: #ddd;
-  }
-
-  input[type=text], input[type=password] {
-    width: calc(100% - 12px);
-    padding: 8px 6px;
-    font-size: 1rem;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-    margin-bottom: 0.8em;
-  }
-  button {
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0.55em 1.1em;
-    border-radius: 6px;
-    border: none;
-    background: #ff8c00;
-    color: #222;
-    font-weight: 600;
-    transition: background 0.3s ease;
-  }
-  button:hover, button:focus {
-    background: #ffa733;
-  }
-
-  #playersList {
-    margin-top: 1em;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.9em;
-    justify-content: center;
-  }
-  .card {
-    background: #222a;
-    border-radius: 8px;
-    padding: 0.7em 1em;
-    min-width: 160px;
-    max-width: 180px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 0 10px #000a inset;
-    transition: background-color 0.3s ease;
-    color: #eee;
-    user-select: none;
-  }
-  .card.alive {
-    background-color: #224422cc;
-  }
-  .card.dead {
-    background-color: #442222cc;
-    opacity: 0.6;
-    text-decoration: line-through;
-  }
-  .player-name {
-    font-weight: 700;
-    font-size: 1.15rem;
-    margin-bottom: 0.25em;
-    text-align: center;
-  }
-  .role-name {
-    font-style: italic;
-    font-size: 0.95rem;
-    color: #ffa733;
-    margin-bottom: 0.5em;
-    text-align: center;
-  }
-  .status-btn {
-    background: #ff8c00;
-    border-radius: 5px;
-    border: none;
-    padding: 0.35em 0.8em;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #222;
-    transition: background 0.3s ease;
-  }
-  .status-btn:hover {
-    background: #ffa733;
-  }
-
-  #assignRolesBtn {
-    display: block;
-    margin: 1.2em auto 0 auto;
-    width: 100%;
-  }
-
-  #masterLogin {
-    margin-top: 2em;
-  }
-  #masterLogin input {
-    margin-bottom: 0.6em;
-  }
-  #masterView {
-    margin-top: 2em;
-    background: #111c2bdd;
-    border-radius: 12px;
-    padding: 1em 1.2em;
-    box-shadow: 0 0 15px #ff8c0099;
-  }
-  #masterView h2 {
-    text-align: center;
-    color: #ffb347;
-    margin-top: 0;
-    margin-bottom: 0.7em;
-  }
-  #masterTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 0.8em;
-  }
-  #masterTable th, #masterTable td {
-    border: 1px solid #ff8c00cc;
-    padding: 0.45em 0.6em;
-    text-align: center;
-    font-weight: 600;
-  }
-  #masterTable th {
-    background: #ff8c00cc;
-    color: #222;
-  }
-  #masterTable tbody tr.alive {
-    background: #227722aa;
-    color: #e0ffe0;
-  }
-  #masterTable tbody tr.dead {
-    background: #772222aa;
-    color: #ffcccc;
-    text-decoration: line-through;
-  }
-
-  #closeMasterView {
-    display: block;
-    margin: 0 auto;
-    width: 50%;
-    background: #cc5500;
-    color: #fff;
-  }
-  #closeMasterView:hover {
-    background: #ff6a00;
-  }
-
-  #qr {
-    position: fixed;
-    left: 12px;
-    bottom: 12px;
-    background: rgba(0,0,0,0.45);
-    padding: 6px 8px;
-    border-radius: 10px;
-    user-select: none;
-    filter: drop-shadow(0 0 2px #0009);
-    width: 80px;
-    text-align: center;
-    color: #ff8c00;
-    font-weight: 600;
-    font-size: 0.8rem;
-    cursor: default;
-    transition: opacity 0.3s ease;
-    opacity: 0.45;
-  }
-  #qr:hover {
-    opacity: 0.85;
-  }
-  #qr img {
-    width: 60px;
-    height: 60px;
-    margin-top: 4px;
-    border-radius: 8px;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  footer {
-    margin-top: auto;
-    color: #999;
-    font-size: 0.75rem;
-    text-align: center;
-    padding: 0.5rem;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Werwolf Spiel</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: url('https://images.unsplash.com/photo-1615895882344-3e305a9c28db?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #fefefe;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 2rem;
+      border-radius: 12px;
+    }
+    h1 {
+      text-align: center;
+      color: #ffb400;
+    }
+    input, button {
+      padding: 0.7em;
+      width: 100%;
+      margin: 0.5em 0;
+      border-radius: 6px;
+      border: none;
+      font-size: 1em;
+    }
+    button {
+      background-color: #ffb400;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ffc933;
+    }
+    #playerSection, #roleReveal, #masterLogin, #masterSection {
+      display: none;
+    }
+    .hidden {
+      display: none;
+    }
+    #qr {
+      position: fixed;
+      left: 15px;
+      bottom: 15px;
+      opacity: 0.6;
+      transition: 0.3s;
+    }
+    #qr:hover {
+      opacity: 1;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      margin-top: 2rem;
+      color: #aaa;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 0.5em;
+      text-align: center;
+    }
+    th {
+      background-color: #222;
+    }
+    .dead {
+      text-decoration: line-through;
+      color: red;
+    }
+  </style>
 </head>
 <body>
-  <div id="container">
-    <h1>Werwolf Spiel</h1>
-    <p>Spieler-Namen eingeben und Rollen werden zufällig verteilt. Danach kann der Erzähler den Überblick behalten.</p>
+  <div class="container">
+    <h1>🎲 Werwolf Spiel</h1>
 
-    <input type="text" id="playerNameInput" placeholder="Neuen Spielernamen eingeben" autocomplete="off" />
-    <button id="addPlayerBtn">Spieler hinzufügen</button>
-
-    <div id="playersList"></div>
-
-    <button id="assignRolesBtn">Rollen verteilen</button>
-
-    <div id="masterLogin">
-      <input type="password" id="masterPassword" placeholder="Erzähler Passwort" autocomplete="off" />
-      <button id="masterLoginBtn">Erzähler Login</button>
+    <div id="setup">
+      <input type="text" id="playerName" placeholder="Dein Name">
+      <button onclick="addPlayer()">Beitreten & Rolle ziehen</button>
+      <button onclick="showMasterLogin()">Ich bin der Erzähler</button>
     </div>
 
-    <div id="masterView" style="display:none;">
+    <div id="roleReveal">
+      <h2>Hallo <span id="currentName"></span>!</h2>
+      <p>Deine geheime Rolle ist:</p>
+      <h2 id="yourRole" style="color:#ffb400;"></h2>
+    </div>
+
+    <div id="masterLogin">
+      <input type="password" id="masterPass" placeholder="Passwort für Erzähler (z.B. 9999)">
+      <button onclick="checkMaster()">Login</button>
+    </div>
+
+    <div id="masterSection">
       <h2>Erzähler Übersicht</h2>
-      <table id="masterTable" aria-label="Erzähler Spielübersicht">
+      <table>
         <thead>
-          <tr><th>Spieler</th><th>Rolle</th><th>Status</th></tr>
+          <tr>
+            <th>Spieler</th>
+            <th>Rolle</th>
+            <th>Status</th>
+            <th>Aktion</th>
+          </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="masterTable"></tbody>
       </table>
-      <button id="closeMasterView">Erzähler Übersicht schließen</button>
+      <button onclick="logoutMaster()">Logout Erzähleransicht</button>
     </div>
   </div>
 
-  <div id="qr" title="QR-Code zum Spiel" aria-label="QR-Code zum Spiel">
-    <div>Spiel-App</div>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fmaxi5455.github.io%2FWerwolf-Spiel%2Fwolf.html" alt="QR-Code" />
+  <div id="qr">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://maxi5455.github.io/Werwolf-Spiel/wolf.html" width="80" alt="QR">
   </div>
 
   <footer>
-    Erstellt von Maximilian Fischer • Seit 21.05.2025
+    Erstellt von Maximilian Fischer – Seit 21.05.2025
   </footer>
 
 <script>
-  // Spieler-Array
+  const roles = ["Werwolf", "Werwolf", "Seher", "Hexe", "Jäger", "Bürger", "Bürger", "Bürger"];
   let players = [];
+  let assigned = false;
+  let masterView = false;
 
-  // Beispiel Rollen für 8 Spieler (du kannst anpassen)
-  const roles = [
-    "Werwolf",
-    "Werwolf",
-    "Seher",
-    "Hexe",
-    "Jäger",
-    "Bürger",
-    "Bürger",
-    "Bürger"
-  ];
+  function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
 
-  // DOM Elemente
-  const playerNameInput = document.getElementById('playerNameInput');
-  const addPlayerBtn = document.getElementById('addPlayerBtn');
-  const playersList = document.getElementById('playersList');
-  const assignRolesBtn = document.getElementById('assignRolesBtn');
-  const masterLoginBtn = document.getElementById('masterLoginBtn');
-  const masterPassword = document.getElementById('masterPassword');
-  const masterView = document.getElementById('masterView');
-  const masterTableBody = document.querySelector('#masterTable tbody');
-  const closeMasterViewBtn = document.getElementById('closeMasterView');
-
-  let isMaster = false; // Erzähler-Status
-
-  // Spieler hinzufügen
-  addPlayerBtn.addEventListener('click', () => {
-    const name = playerNameInput.value.trim();
-    if (!name) return alert('Bitte einen Spielernamen eingeben.');
-    if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) {
-      alert('Dieser Name ist bereits vergeben.');
-      return;
+  function addPlayer() {
+    const name = document.getElementById("playerName").value.trim();
+    if (!name) return alert("Bitte gib deinen Namen ein.");
+    if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) return alert("Name bereits vergeben.");
+    if (!assigned) {
+      players.push({ name, role: null, alive: true });
+      assignRoles();
     }
-    players.push({ name: name, role: null, alive: true });
-    playerNameInput.value = '';
-    renderPlayersList();
-  });
+    const player = players.find(p => p.name === name);
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("roleReveal").style.display = "block";
+    document.getElementById("currentName").textContent = player.name;
+    document.getElementById("yourRole").textContent = player.role;
+  }
 
-  // Enter-Taste für Spieler hinzufügen
-  playerNameInput.addEventListener('keypress', e => {
-    if (e.key === 'Enter') addPlayerBtn.click();
-  });
-
-  // Rollen zufällig verteilen
-  assignRolesBtn.addEventListener('click', () => {
-    if (players.length < roles.length) {
-      alert(`Mindestens ${roles.length} Spieler benötigt.`);
-      return;
-    }
-    // Rollen mischen
-    const shuffledRoles = roles.slice().sort(() => Math.random() - 0.5);
+  function assignRoles() {
+    const shuffled = shuffle(roles.slice());
     for (let i = 0; i < players.length; i++) {
-      players[i].role = i < shuffledRoles.length ? shuffledRoles[i] : "Bürger";
+      players[i].role = shuffled[i] || "Bürger";
       players[i].alive = true;
     }
-    renderPlayersList();
-    alert('Rollen wurden verteilt!');
-  });
+    assigned = true;
+  }
 
-  // Erzähler Login
-  masterLoginBtn.addEventListener('click', () => {
-    const pw = masterPassword.value.trim();
-    if (pw === 'werwolf123') { // Passwort hier anpassen
-      masterPassword.value = '';
-      isMaster = true;
-      showMasterView();
-      renderPlayersList();
+  function showMasterLogin() {
+    document.getElementById("setup").style.display = "none";
+    document.getElementById("masterLogin").style.display = "block";
+  }
+
+  function checkMaster() {
+    const input = document.getElementById("masterPass").value;
+    if (input === "9999") {
+      masterView = true;
+      document.getElementById("masterLogin").style.display = "none";
+      document.getElementById("masterSection").style.display = "block";
+      updateMasterView();
     } else {
-      alert('Falsches Passwort!');
+      alert("Falsches Passwort!");
     }
-  });
-
-  // Erzähler Ansicht zeigen
-  function showMasterView() {
-    masterView.style.display = 'block';
-    renderMasterTable();
   }
 
-  // Erzähler Logout / Ansicht schließen
-  closeMasterViewBtn.addEventListener('click', () => {
-    masterView.style.display = 'none';
-    isMaster = false;
-    renderPlayersList();
-  });
+  function updateMasterView() {
+    const tbody = document.getElementById("masterTable");
+    tbody.innerHTML = "";
+    players.forEach((p, i) => {
+      const row = document.createElement("tr");
+      if (!p.alive) row.classList.add("dead");
 
-  // Spieler-Status umschalten (nur Erzähler kann)
-  function updateStatus(idx) {
-    if (!isMaster) return;
-    players[idx].alive = !players[idx].alive;
-    renderPlayersList();
-    renderMasterTable();
-  }
-
-  // Spieler-Übersicht rendern
-  function renderPlayersList() {
-    playersList.innerHTML = '';
-    players.forEach((player, idx) => {
-      const card = document.createElement('div');
-      card.className = 'card ' + (player.alive ? 'alive' : 'dead');
-
-      const nameSpan = document.createElement('span');
-      nameSpan.textContent = player.name;
-      nameSpan.className = 'player-name';
-
-      const roleSpan = document.createElement('span');
-      roleSpan.className = 'role-name';
-      roleSpan.textContent = player.role ? player.role : '–';
-
-      card.appendChild(nameSpan);
-      card.appendChild(roleSpan);
-
-      // Status-Button nur für Erzähler sichtbar
-      if (isMaster) {
-        const statusBtn = document.createElement('button');
-        statusBtn.className = 'status-btn';
-        statusBtn.textContent = player.alive ? 'Tot' : 'Lebendig';
-        statusBtn.title = player.alive ? 'Spieler auf tot setzen' : 'Spieler auf lebendig setzen';
-        statusBtn.addEventListener('click', () => updateStatus(idx));
-        card.appendChild(statusBtn);
-      }
-
-      playersList.appendChild(card);
+      row.innerHTML = `
+        <td>${p.name}</td>
+        <td>${p.role}</td>
+        <td>${p.alive ? "Lebendig" : "Tot"}</td>
+        <td><button onclick="toggleStatus(${i})">${p.alive ? "✖ Töten" : "✅ Wiederbeleben"}</button></td>
+      `;
+      tbody.appendChild(row);
     });
   }
 
-  // Erzähler Tabelle rendern
-  function renderMasterTable() {
-    masterTableBody.innerHTML = '';
-    players.forEach(player => {
-      const tr = document.createElement('tr');
-      tr.className = player.alive ? 'alive' : 'dead';
-
-      const tdName = document.createElement('td');
-      tdName.textContent = player.name;
-
-      const tdRole = document.createElement('td');
-      tdRole.textContent = player.role ? player.role : '–';
-
-      const tdStatus = document.createElement('td');
-      tdStatus.textContent = player.alive ? 'Lebendig' : 'Tot';
-
-      tr.appendChild(tdName);
-      tr.appendChild(tdRole);
-      tr.appendChild(tdStatus);
-
-      masterTableBody.appendChild(tr);
-    });
+  function toggleStatus(index) {
+    players[index].alive = !players[index].alive;
+    updateMasterView();
   }
 
-  // Initial render
-  renderPlayersList();
+  function logoutMaster() {
+    masterView = false;
+    document.getElementById("masterSection").style.display = "none";
+    document.getElementById("setup").style.display = "block";
+  }
 </script>
 </body>
 </html>
