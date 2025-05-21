@@ -76,7 +76,24 @@
       padding: 0;
     }
     li {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.8rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    li.dead {
+      color: #999;
+      text-decoration: line-through;
+    }
+    li button {
+      margin-left: 0.5rem;
+      font-size: 0.9rem;
+      padding: 0.3rem 0.6rem;
     }
     .phase {
       margin-top: 1rem;
@@ -196,7 +213,9 @@
       list.innerHTML = '';
       players.forEach((p, i) => {
         const li = document.createElement('li');
-        li.innerHTML = `${p.name} – <b>${p.role}</b> <button onclick="toggleAlive(${i})">${p.alive ? '☠️ Töten' : '♻️ Wiederbeleben'}</button>`;
+        const statusButton = `<button onclick="toggleAlive(${i})">${p.alive ? '☠️ Töten' : '♻️ Wiederbeleben'}</button>`;
+        const deleteButton = `<button onclick="deletePlayer(${i})">🗑️ Löschen</button>`;
+        li.innerHTML = `${p.name} – <b>${p.role}</b> ${statusButton} ${deleteButton}`;
         li.className = p.alive ? '' : 'dead';
         list.appendChild(li);
       });
@@ -206,6 +225,14 @@
       players[index].alive = !players[index].alive;
       saveGame();
       updatePlayerList();
+    }
+
+    function deletePlayer(index) {
+      if (confirm(`Spieler "${players[index].name}" wirklich löschen?`)) {
+        players.splice(index, 1);
+        saveGame();
+        updatePlayerList();
+      }
     }
 
     function togglePhase() {
