@@ -5,56 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Werwolf Spiel</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel&family=MedievalSharp&display=swap');
     body {
       margin: 0;
-      font-family: 'MedievalSharp', cursive;
-      background-image: url('https://images.unsplash.com/photo-1604086591497-e24c6409f8d0?auto=format&fit=crop&w=1470&q=80');
+      font-family: 'Cinzel', serif;
+      background-image: url('https://images.unsplash.com/photo-1536697246785-6cb3f93e367f?auto=format&fit=crop&w=1470&q=80');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      color: #fff;
+      color: #f5f5f5;
     }
     .container {
-      max-width: 800px;
-      margin: auto;
+      max-width: 900px;
+      margin: 2rem auto;
       padding: 2rem;
-      background-color: rgba(0, 0, 0, 0.75);
-      border-radius: 16px;
-      margin-top: 50px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      background: rgba(10, 10, 10, 0.85);
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
     }
     h1, h2, h3 {
       text-align: center;
-      margin-bottom: 1rem;
       color: #ffd700;
+      font-family: 'MedievalSharp', cursive;
     }
     input, button {
-      padding: 0.6rem;
+      padding: 0.7rem;
       font-size: 1rem;
       margin-top: 0.5rem;
-      border-radius: 8px;
+      border-radius: 10px;
       border: none;
       width: 100%;
       box-sizing: border-box;
+      font-family: 'MedievalSharp', cursive;
     }
     input {
-      background-color: #333;
+      background-color: #222;
       color: #fff;
     }
     button {
-      background-color: #ff9800;
-      color: white;
-      cursor: pointer;
+      background-color: #d4af37;
+      color: black;
+      font-weight: bold;
     }
     button:hover {
-      background-color: #e68a00;
+      background-color: #bfa230;
     }
     .hidden {
       display: none;
     }
     .dead {
-      color: #999;
+      color: #888;
       text-decoration: line-through;
     }
     #qr {
@@ -62,7 +62,7 @@
       top: 10px;
       left: 10px;
       width: 80px;
-      opacity: 0.7;
+      opacity: 0.5;
     }
     #impressum {
       position: fixed;
@@ -76,31 +76,28 @@
       padding: 0;
     }
     li {
-      margin-bottom: 0.8rem;
-      background-color: rgba(255, 255, 255, 0.05);
-      padding: 0.5rem;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    li.dead {
-      color: #999;
-      text-decoration: line-through;
-    }
-    li button {
-      margin-left: 0.5rem;
-      font-size: 0.9rem;
-      padding: 0.3rem 0.6rem;
+      margin-bottom: 0.6rem;
     }
     .phase {
       margin-top: 1rem;
       font-weight: bold;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       color: #00e5ff;
+    }
+    .role-box {
+      background-color: #111;
+      padding: 1rem;
+      border: 1px solid #444;
+      border-radius: 10px;
+      margin: 1rem 0;
+    }
+    .button-small {
+      width: auto;
+      margin-left: 0.5rem;
+      background-color: #a52a2a;
+      color: #fff;
+      padding: 0.4rem 0.7rem;
     }
   </style>
 </head>
@@ -109,18 +106,15 @@
 
   <div class="container" id="setup">
     <h1>Werwolf Spiel</h1>
-    <p>Gib deinen Namen ein:</p>
     <input id="playerName" placeholder="Dein Name">
-    <br>
     <button onclick="joinGame()">Rolle ziehen</button>
-    <br><br>
     <button onclick="showMasterLogin()">Ich bin der Erzähler</button>
   </div>
 
   <div class="container hidden" id="roleSection">
     <h2>Hallo <span id="playerDisplayName"></span>!</h2>
     <p>Deine Rolle ist:</p>
-    <div id="roleReveal">
+    <div id="roleReveal" class="role-box">
       <h2><span id="playerRole"></span></h2>
     </div>
     <button onclick="toggleRole()">Rolle anzeigen/verbergen</button>
@@ -129,7 +123,6 @@
   <div class="container hidden" id="masterLogin">
     <h2>Erzähler Zugang</h2>
     <input id="masterPwd" placeholder="Passwort">
-    <br>
     <button onclick="unlockMaster()">Login</button>
   </div>
 
@@ -213,9 +206,7 @@
       list.innerHTML = '';
       players.forEach((p, i) => {
         const li = document.createElement('li');
-        const statusButton = `<button onclick="toggleAlive(${i})">${p.alive ? '☠️ Töten' : '♻️ Wiederbeleben'}</button>`;
-        const deleteButton = `<button onclick="deletePlayer(${i})">🗑️ Löschen</button>`;
-        li.innerHTML = `${p.name} – <b>${p.role}</b> ${statusButton} ${deleteButton}`;
+        li.innerHTML = `${p.name} – <b>${p.role}</b> <button class="button-small" onclick="toggleAlive(${i})">${p.alive ? '☠️ Töten' : '♻️ Wiederbeleben'}</button> <button class="button-small" onclick="removePlayer(${i})">🗑️ Entfernen</button>`;
         li.className = p.alive ? '' : 'dead';
         list.appendChild(li);
       });
@@ -227,12 +218,10 @@
       updatePlayerList();
     }
 
-    function deletePlayer(index) {
-      if (confirm(`Spieler "${players[index].name}" wirklich löschen?`)) {
-        players.splice(index, 1);
-        saveGame();
-        updatePlayerList();
-      }
+    function removePlayer(index) {
+      players.splice(index, 1);
+      saveGame();
+      updatePlayerList();
     }
 
     function togglePhase() {
