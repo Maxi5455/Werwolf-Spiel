@@ -28,7 +28,7 @@
       margin-bottom: 1rem;
       color: #ffd700;
     }
-    input, button {
+    input, button, select {
       padding: 0.6rem;
       font-size: 1rem;
       margin-top: 0.5rem;
@@ -37,7 +37,7 @@
       width: 100%;
       box-sizing: border-box;
     }
-    input {
+    input, select {
       background-color: #333;
       color: #fff;
     }
@@ -91,6 +91,11 @@
 
   <div class="container" id="setup">
     <h1>Werwolf Spiel</h1>
+    <p>Wähle Spielmodus:</p>
+    <select id="modeSelect">
+      <option value="einfach">Einfach</option>
+      <option value="erweitert">Erweitert</option>
+    </select>
     <p>Gib deinen Namen ein:</p>
     <input id="playerName" placeholder="Dein Name">
     <br>
@@ -127,47 +132,45 @@
 
   <div class="container hidden" id="rulesBox">
     <h2>Spielregeln</h2>
-    <p>Tagsüber diskutieren alle Spieler und wählen jemanden, den sie für einen Werwolf halten. Nachts agieren die Werwölfe und andere Rollen heimlich.</p>
-    <h3>Verfügbare Rollen</h3>
-    <ul>
-      <li><b>Werwolf:</b> Tötet nachts einen Spieler.</li>
-      <li><b>Seher:</b> Sieht nachts die Rolle eines Spielers.</li>
-      <li><b>Hexe:</b> Hat Heil- und Gifttrank.</li>
-      <li><b>Jäger:</b> Darf beim Tod einen mitnehmen.</li>
-      <li><b>Bürger:</b> Keine Spezialfähigkeit.</li>
-    </ul>
+    <div id="rulesContent"></div>
     <button onclick="toggleRules()">Schließen</button>
   </div>
 
   <div id="impressum">© Maximilian Fischer – seit 21.05.2025</div>
 
   <script>
-    const roles = ["Werwolf", "Werwolf", "Seher", "Hexe", "Jäger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger"];
+    const simpleRoles = ["Werwolf", "Werwolf", "Seher", "Hexe", "Jäger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger"];
+    const advancedRoles = ["Werwolf", "Werwolf", "Alpha-Werwolf", "Seher", "Hexe", "Jäger", "Amor", "Schutzengel", "Trunkenbold", "Bürger", "Bürger", "Bürger"];
     let players = JSON.parse(localStorage.getItem('players')) || [];
     let assigned = !!players.length;
     let phase = localStorage.getItem('phase') || 'Nacht';
+    let gameMode = localStorage.getItem('mode') || 'einfach';
 
     function shuffle(arr) {
       return arr.sort(() => Math.random() - 0.5);
     }
 
     function assignRoles() {
-      shuffle(roles);
+      const selectedRoles = gameMode === 'einfach' ? simpleRoles : advancedRoles;
+      shuffle(selectedRoles);
       assigned = true;
+      return selectedRoles;
     }
 
     function saveGame() {
       localStorage.setItem('players', JSON.stringify(players));
       localStorage.setItem('phase', phase);
+      localStorage.setItem('mode', gameMode);
     }
 
     function joinGame() {
       const name = document.getElementById("playerName").value.trim();
+      gameMode = document.getElementById("modeSelect").value;
       if (!name) return alert("Bitte gib deinen Namen ein.");
       if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) return alert("Name bereits vergeben!");
 
-      if (!assigned) assignRoles();
-      const role = roles[players.length % roles.length];
+      const selectedRoles = assignRoles();
+      const role = selectedRoles[players.length % selectedRoles.length];
       players.push({ name, role, alive: true });
       saveGame();
 
@@ -219,7 +222,34 @@
     }
 
     function toggleRules() {
-      document.getElementById("rulesBox").classList.toggle("hidden");
+      const rulesBox = document.getElementById("rulesBox");
+      const content = document.getElementById("rulesContent");
+      rulesBox.classList.toggle("hidden");
+      if (!rulesBox.classList.contains("hidden")) {
+        content.innerHTML = gameMode === 'einfach' ? `
+          <p>Tagsüber diskutieren alle Spieler und wählen jemanden, den sie für einen Werwolf halten. Nachts agieren die Werwölfe und andere Rollen heimlich.</p>
+          <h3>Verfügbare Rollen</h3>
+          <ul>
+            <li><b>Werwolf:</b> Tötet nachts einen Spieler.</li>
+            <li><b>Seher:</b> Sieht nachts die Rolle eines Spielers.</li>
+            <li><b>Hexe:</b> Hat Heil- und Gifttrank.</li>
+            <li><b>Jäger:</b> Darf beim Tod einen mitnehmen.</li>
+            <li><b>Bürger:</b> Keine Spezialfähigkeit.</li>
+          </ul>` : `
+          <p>Erweiterter Modus mit mehr Rollen und komplexeren Interaktionen.</p>
+          <h3>Verfügbare Rollen</h3>
+          <ul>
+            <li><b>Werwolf:</b> Tötet nachts einen Spieler.</li>
+            <li><b>Alpha-Werwolf:</b> Kann andere Werwölfe überstimmen.</li>
+            <li><b>Seher:</b> Sieht nachts die Rolle eines Spielers.</li>
+            <li><b>Hexe:</b> Hat Heil- und Gifttrank.</li>
+            <li><b>Jäger:</b> Darf beim Tod einen mitnehmen.</li>
+            <li><b>Amor:</b> Verkuppelt zwei Spieler.</li>
+            <li><b>Schutzengel:</b> Beschützt jede Nacht jemanden.</li>
+            <li><b>Trunkenbold:</b> Kennt seine Rolle erst nach der ersten Nacht.</li>
+            <li><b>Bürger:</b> Keine Spezialfähigkeit.</li>
+          </ul>`;
+      }
     }
 
     window.onload = () => {
