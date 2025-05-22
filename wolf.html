@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Werwolf Spiel</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
     body {
@@ -14,6 +12,7 @@
       background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
       background-size: cover;
       color: #f7d874;
+      overflow-x: hidden;
     }
     .container {
       max-width: 800px;
@@ -50,92 +49,127 @@
     button:hover {
       background-color: #e68a00;
     }
-    .hidden { display: none; }
-    .dead { color: #999; text-decoration: line-through; }
-    #qr { position: fixed; top: 10px; left: 10px; width: 80px; opacity: 0.7; }
-    #impressum { position: fixed; bottom: 10px; right: 10px; font-size: 0.8rem; color: #ccc; }
-    ul { list-style: none; padding: 0; }
-    li { margin-bottom: 0.5rem; }
-    .phase { margin-top: 1rem; font-weight: bold; text-align: center; font-size: 1.2rem; color: #00e5ff; }
-    .role-hidden b { filter: blur(5px); }
+    .hidden {
+      display: none;
+    }
+    .dead {
+      color: #999;
+      text-decoration: line-through;
+    }
+    #qr {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      width: 80px;
+      opacity: 0.7;
+    }
+    #impressum {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    .phase {
+      margin-top: 1rem;
+      font-weight: bold;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #00e5ff;
+    }
   </style>
 </head>
 <body>
   <img id="qr" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://maxi5455.github.io/Werwolf-Spiel/wolf.html" alt="QR Code">
+
   <div class="container" id="setup">
     <h1>Werwolf Spiel</h1>
+    <p>Gib deinen Namen ein:</p>
     <input id="playerName" placeholder="Dein Name">
+    <br>
     <button onclick="joinGame()">Rolle ziehen</button>
+    <br><br>
     <button onclick="showMasterLogin()">Ich bin der Erzähler</button>
+    <br><br>
+    <button onclick="toggleRules()">📜 Spielregeln anzeigen</button>
   </div>
 
   <div class="container hidden" id="roleSection">
     <h2>Hallo <span id="playerDisplayName"></span>!</h2>
     <p>Deine Rolle ist:</p>
-    <div id="roleReveal"><h2><span id="playerRole"></span></h2></div>
+    <div id="roleReveal">
+      <h2><span id="playerRole"></span></h2>
+    </div>
     <button onclick="toggleRole()">Rolle anzeigen/verbergen</button>
   </div>
 
   <div class="container hidden" id="masterLogin">
     <h2>Erzähler Zugang</h2>
-    <input id="masterPwd" type="password" placeholder="Passwort">
+    <input id="masterPwd" placeholder="Passwort" type="password">
+    <br>
     <button onclick="unlockMaster()">Login</button>
   </div>
 
   <div class="container hidden" id="masterPanel">
     <h2>Erzähler Übersicht</h2>
     <button onclick="togglePhase()">Phase wechseln</button>
-    <button onclick="toggleRoleVisibility()">Rollen ein-/ausblenden</button>
     <p class="phase" id="phase">🌙 Nacht</p>
+    <h3>Spielerliste</h3>
     <ul id="playerList"></ul>
+  </div>
+
+  <div class="container hidden" id="rulesBox">
+    <h2>Spielregeln</h2>
+    <p>Tagsüber diskutieren alle Spieler und wählen jemanden, den sie für einen Werwolf halten. Nachts agieren die Werwölfe und andere Rollen heimlich.</p>
+    <h3>Verfügbare Rollen</h3>
+    <ul>
+      <li><b>Werwolf:</b> Tötet nachts einen Spieler.</li>
+      <li><b>Seher:</b> Sieht nachts die Rolle eines Spielers.</li>
+      <li><b>Hexe:</b> Hat Heil- und Gifttrank.</li>
+      <li><b>Jäger:</b> Darf beim Tod einen mitnehmen.</li>
+      <li><b>Bürger:</b> Keine Spezialfähigkeit.</li>
+    </ul>
+    <button onclick="toggleRules()">Schließen</button>
   </div>
 
   <div id="impressum">© Maximilian Fischer – seit 21.05.2025</div>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDsmW7iO8xYLddVuc2bfMZmxHhQexc5U0M",
-      authDomain: "werwolf-a6f64.firebaseapp.com",
-      databaseURL: "https://werwolf-a6f64-default-rtdb.europe-west1.firebasedatabase.app/",
-      projectId: "werwolf-a6f64",
-      storageBucket: "werwolf-a6f64.appspot.com",
-      messagingSenderId: "911084494700",
-      appId: "1:911084494700:web:52f98514790d354ae01d49",
-      measurementId: "G-C1ESR9J2CK"
-    };
+    const roles = ["Werwolf", "Werwolf", "Seher", "Hexe", "Jäger", "Bürger", "Bürger", "Bürger", "Bürger", "Bürger"];
+    let players = JSON.parse(localStorage.getItem('players')) || [];
+    let assigned = !!players.length;
+    let phase = localStorage.getItem('phase') || 'Nacht';
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    let players = [];
-    let phase = 'Nacht';
-    let roleVisibility = true;
-    let assignedRoles = [];
-    const initialRoles = ["Werwolf", "Werwolf", "Seher", "Hexe", "Jäger", "Bürger", "Bürger", "Bürger", "Bürger"];
-    let availableRoles = [...initialRoles];
-
-    function saveToFirebase() {
-      db.ref("game").set({ players, phase });
+    function shuffle(arr) {
+      return arr.sort(() => Math.random() - 0.5);
     }
 
-    db.ref("game").on("value", snapshot => {
-      const data = snapshot.val();
-      if (data) {
-        players = data.players || [];
-        phase = data.phase || 'Nacht';
-        updatePlayerList();
-        document.getElementById("phase").textContent = phase === 'Nacht' ? '🌙 Nacht' : '🌞 Tag';
-      }
-    });
+    function assignRoles() {
+      shuffle(roles);
+      assigned = true;
+    }
+
+    function saveGame() {
+      localStorage.setItem('players', JSON.stringify(players));
+      localStorage.setItem('phase', phase);
+    }
 
     function joinGame() {
       const name = document.getElementById("playerName").value.trim();
       if (!name) return alert("Bitte gib deinen Namen ein.");
       if (players.find(p => p.name.toLowerCase() === name.toLowerCase())) return alert("Name bereits vergeben!");
 
-      const role = assignRole();
+      if (!assigned) assignRoles();
+      const role = roles[players.length % roles.length];
       players.push({ name, role, alive: true });
-      saveToFirebase();
+      saveGame();
 
       document.getElementById("setup").classList.add("hidden");
       document.getElementById("roleSection").classList.remove("hidden");
@@ -143,14 +177,9 @@
       document.getElementById("playerRole").textContent = role;
     }
 
-    function assignRole() {
-      if (availableRoles.length === 0) return "Bürger";
-      const index = Math.floor(Math.random() * availableRoles.length);
-      return availableRoles.splice(index, 1)[0];
-    }
-
     function toggleRole() {
-      document.getElementById("roleReveal").classList.toggle("hidden");
+      const r = document.getElementById("roleReveal");
+      r.classList.toggle("hidden");
     }
 
     function showMasterLogin() {
@@ -160,7 +189,7 @@
 
     function unlockMaster() {
       const pwd = document.getElementById("masterPwd").value;
-      if (pwd !== "9999") return alert("Falsches Passwort!");
+      if (pwd !== "werwolf123") return alert("Falsches Passwort!");
       document.getElementById("masterLogin").classList.add("hidden");
       document.getElementById("masterPanel").classList.remove("hidden");
       updatePlayerList();
@@ -171,36 +200,34 @@
       list.innerHTML = '';
       players.forEach((p, i) => {
         const li = document.createElement('li');
+        li.innerHTML = `${p.name} – <b>${p.role}</b> <button onclick="toggleAlive(${i})">${p.alive ? '☠️ Töten' : '♻️ Wiederbeleben'}</button>`;
         li.className = p.alive ? '' : 'dead';
-        li.classList.toggle('role-hidden', !roleVisibility);
-        li.innerHTML = `${p.name} – <b>${p.role}</b> 
-          <button onclick="toggleAlive(${i})">${p.alive ? '☠️' : '♻️'}</button>
-          <button onclick="deletePlayer(${i})">🗑️</button>`;
         list.appendChild(li);
       });
     }
 
     function toggleAlive(index) {
       players[index].alive = !players[index].alive;
-      saveToFirebase();
-    }
-
-    function deletePlayer(index) {
-      const roleToFree = players[index].role;
-      availableRoles.push(roleToFree);
-      players.splice(index, 1);
-      saveToFirebase();
+      saveGame();
+      updatePlayerList();
     }
 
     function togglePhase() {
       phase = (phase === 'Nacht') ? 'Tag' : 'Nacht';
-      saveToFirebase();
+      document.getElementById("phase").textContent = (phase === 'Nacht') ? '🌙 Nacht' : '🌞 Tag';
+      saveGame();
     }
 
-    function toggleRoleVisibility() {
-      roleVisibility = !roleVisibility;
-      updatePlayerList();
+    function toggleRules() {
+      document.getElementById("rulesBox").classList.toggle("hidden");
     }
+
+    window.onload = () => {
+      if (players.length) {
+        document.getElementById("setup").classList.remove("hidden");
+      }
+      document.getElementById("phase").textContent = (phase === 'Nacht') ? '🌙 Nacht' : '🌞 Tag';
+    };
   </script>
 </body>
 </html>
